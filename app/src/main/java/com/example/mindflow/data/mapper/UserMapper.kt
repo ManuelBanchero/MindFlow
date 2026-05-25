@@ -1,5 +1,6 @@
 package com.example.mindflow.data.mapper
 
+import com.example.mindflow.data.local.entity.UserEntity
 import com.example.mindflow.data.local.entity.UserWithIdeasRelation
 import com.example.mindflow.domain.model.User
 
@@ -12,5 +13,16 @@ fun UserWithIdeasRelation.toDomain(): User {
         mail = this.user.mail,
         isSubscribed = this.user.isSubscribed,
         ideas = this.ideas.map { it.toDomain() }
+    )
+}
+
+fun User.toEntity(): UserEntity {
+    return UserEntity(
+        id = this.id,
+        firstName = this.firstName,
+        lastName = this.lastName,
+        password = this.password,
+        mail = this.mail,
+        isSubscribed = this.isSubscribed
     )
 }
