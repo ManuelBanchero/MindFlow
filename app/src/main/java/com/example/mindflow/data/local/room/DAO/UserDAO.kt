@@ -1,4 +1,4 @@
-package com.example.mindflow.data.local.room
+package com.example.mindflow.data.local.room.DAO
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -16,5 +16,5 @@ interface UserDAO {
     suspend fun deleteUser(user: UserEntity)
 
     @Query("SELECT first_name FROM users WHERE id = :userId")
-    suspend fun getUserFirstName(userId: Int): String
+    suspend fun getUserFirstName(userId: Int): String?
 }

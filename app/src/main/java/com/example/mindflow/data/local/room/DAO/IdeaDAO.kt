@@ -1,4 +1,4 @@
-package com.example.mindflow.data.local.room
+package com.example.mindflow.data.local.room.DAO
 
 import androidx.room.Dao
 import androidx.room.Delete
@@ -11,11 +11,12 @@ import com.example.mindflow.data.local.entity.IdeaWithQuestionsRelation
 import com.example.mindflow.data.local.entity.QuestionEntity
 import kotlinx.coroutines.flow.Flow
 
-@Dao interface IdeaDAO {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+@Dao
+interface IdeaDAO {
+    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun insertIdea(idea: IdeaEntity, question: QuestionEntity): Long
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
     suspend fun insertQuestions(questions: List<QuestionEntity>)
 
     @Delete
