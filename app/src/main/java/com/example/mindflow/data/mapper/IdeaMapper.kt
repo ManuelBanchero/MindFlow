@@ -1,5 +1,7 @@
 package com.example.mindflow.data.mapper
 
+import androidx.compose.ui.util.fastJoinToString
+import com.example.mindflow.data.local.entity.IdeaEntity
 import com.example.mindflow.data.local.entity.IdeaWithQuestionsRelation
 import com.example.mindflow.data.local.entity.QuestionEntity
 import com.example.mindflow.domain.model.Idea
@@ -29,5 +31,30 @@ fun IdeaWithQuestionsRelation.toDomain(): Idea {
         summarizeContent = this.idea.summarizeContent,
         structuredIdea = this.idea.structuredIdea,
         questions = this.questions.map { it.toDomain() }
+    )
+}
+
+fun Idea.toEntity(): IdeaEntity {
+    return IdeaEntity(
+        id = this.id,
+        userId = this.userId,
+        title = this.title,
+        createdAt = this.createdAt.toEpochMilli(),
+        updatedAt = this.updatedAt.toEpochMilli(),
+        category = this.category,
+        textsAudioHistory = this.textsAudiosHistory.joinToString("\n\n"),
+        summarizeContent = this.summarizeContent,
+        structuredIdea = this.structuredIdea
+    )
+}
+
+fun Question.toEntity(): QuestionEntity {
+    return QuestionEntity(
+        id = this.id,
+        ideaId = this.ideaId,
+        category = this.category,
+        questionText = this.questionText,
+        description = this.description,
+        userAnswer = this.userAnswer
     )
 }
