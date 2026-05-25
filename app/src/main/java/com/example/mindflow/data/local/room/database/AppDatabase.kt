@@ -16,6 +16,5 @@ import com.example.mindflow.data.local.room.DAO.UserDAO
     exportSchema = false)
 abstract class AppDatabase: RoomDatabase() {
     abstract fun ideaDao(): IdeaDAO
-
     abstract fun userDao(): UserDAO
 }
