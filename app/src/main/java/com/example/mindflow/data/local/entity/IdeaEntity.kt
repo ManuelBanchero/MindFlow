@@ -1,8 +1,8 @@
 package com.example.mindflow.data.local.entity
 
-import androidx.room3.ColumnInfo
-import androidx.room3.Entity
-import androidx.room3.PrimaryKey
+import androidx.room.ColumnInfo
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 
 @Entity(tableName = "ideas")
 data class IdeaEntity(

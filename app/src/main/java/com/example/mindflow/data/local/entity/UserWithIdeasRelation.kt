@@ -3,12 +3,12 @@ package com.example.mindflow.data.local.entity
 import androidx.room.Embedded
 import androidx.room.Relation
 
-data class IdeaWithQuestionsRelation(
+data class UserWithIdeasRelation(
     @Embedded
-    val idea: IdeaEntity,
+    val user: UserEntity,
     @Relation(
         parentColumn = "id",
-        entityColumn = "idea_id"
+        entityColumn = "user_id"
     )
-    val questions: List<QuestionEntity>
+    val ideas: List<IdeaWithQuestionsRelation>
 )
