@@ -5,8 +5,8 @@ import androidx.room.RoomDatabase
 import com.example.mindflow.data.local.entity.IdeaEntity
 import com.example.mindflow.data.local.entity.QuestionEntity
 import com.example.mindflow.data.local.entity.UserEntity
-import com.example.mindflow.data.local.room.DAO.IdeaDAO
-import com.example.mindflow.data.local.room.DAO.UserDAO
+import com.example.mindflow.data.local.room.dao.IdeaDAO
+import com.example.mindflow.data.local.room.dao.UserDAO
 
 @Database(entities = [
     IdeaEntity::class,
