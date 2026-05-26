@@ -15,6 +15,8 @@ interface UserRepository {
         password: String
     ): Result<User>
 
+    suspend fun setActiveSession(user: User): Result<Unit>
+
     suspend fun getActiveSession(): User?
 
     suspend fun logOut(userId: Int): Result<Unit>
