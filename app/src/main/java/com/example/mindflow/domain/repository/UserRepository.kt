@@ -10,7 +10,7 @@ interface UserRepository {
         password: String
     ): Result<Unit>
 
-    suspend fun logIn(
+    suspend fun validateCredentials(
         mail: String,
         password: String
     ): Result<User>

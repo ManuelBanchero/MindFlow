@@ -9,7 +9,6 @@ fun UserWithIdeasRelation.toDomain(): User {
         id = this.user.id,
         firstName = this.user.firstName,
         lastName = this.user.lastName,
-        password = this.user.password,
         mail = this.user.mail,
         isSubscribed = this.user.isSubscribed,
         ideas = this.ideas.map { it.toDomain() }
@@ -21,7 +20,6 @@ fun User.toEntity(): UserEntity {
         id = this.id,
         firstName = this.firstName,
         lastName = this.lastName,
-        password = this.password,
         mail = this.mail,
         isSubscribed = this.isSubscribed
     )

@@ -16,7 +16,6 @@ data class UserEntity(
     val firstName: String,
     @ColumnInfo(name = "last_name")
     val lastName: String,
-    val password: String,
     val mail: String,
     @ColumnInfo(name = "is_subscribed")
     val isSubscribed: Boolean
