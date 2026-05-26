@@ -61,16 +61,8 @@ class UserRepositoryImp(
             // Validate user credentials and get user data
             val user: UserDTO = userRemoteDataSource.logIn(loginRequest)
 
-            // Create user local entity
-            val userEntity = UserEntity(
-                id = user.id,
-                firstName = user.firstName,
-                lastName = user.lastName,
-                mail = user.mail,
-                isSubscribed = user.isSubscribed
-            )
             // Save user locally
-            userDao.insertUser(userEntity)
+            userDao.insertUser(user.toEntity())
 
             Result.success(Unit)
         } catch (e: HttpException) {
