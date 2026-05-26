@@ -5,6 +5,7 @@ import retrofit2.HttpException
 import com.example.mindflow.data.local.entity.UserEntity
 import com.example.mindflow.data.local.room.dao.UserDAO
 import com.example.mindflow.data.mapper.toDomain
+import com.example.mindflow.data.mapper.toEntity
 import com.example.mindflow.data.remote.datasource.UserRemoteDataSource
 import com.example.mindflow.data.remote.dto.LoginRequest
 import com.example.mindflow.data.remote.dto.RegisterRequest
@@ -31,16 +32,8 @@ class UserRepositoryImp(
 
             // First create remote user
             val user: UserDTO = userRemoteDataSource.register(registrationRequest)
-            // When the user is created, now has a unique id -> the app use it to create local user
-            val userEntity = UserEntity(
-                id = user.id,
-                firstName = user.firstName,
-                lastName = user.lastName,
-                mail = user.mail,
-                isSubscribed = user.isSubscribed
-            )
             // Save user locally
-            userDao.insertUser(userEntity)
+            userDao.insertUser(user.toEntity())
 
             Result.success(Unit)
         } catch (e: HttpException) {
