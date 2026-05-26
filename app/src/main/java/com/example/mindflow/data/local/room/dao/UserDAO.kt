@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.example.mindflow.data.local.entity.UserEntity
+import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface UserDAO {
@@ -17,4 +18,7 @@ interface UserDAO {
 
     @Query("SELECT first_name FROM users WHERE id = :userId")
     suspend fun getUserFirstName(userId: Int): String?
+
+    @Query("SELECT is_subscribed FROM users WHERE id = :userId")
+    fun getUserIsSubscribed(userId: Int): Flow<Boolean>
 }
