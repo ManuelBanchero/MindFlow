@@ -6,5 +6,4 @@ data class User(
     val lastName: String,
     val mail: String,
     val isSubscribed: Boolean,
-    val ideas: List<Idea>
     )
