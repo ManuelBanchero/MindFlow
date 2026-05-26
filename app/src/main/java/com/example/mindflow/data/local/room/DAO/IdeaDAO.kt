@@ -13,10 +13,10 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface IdeaDAO {
-    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
-    suspend fun insertIdea(idea: IdeaEntity, question: QuestionEntity): Long
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertIdea(idea: IdeaEntity): Long
 
-    @Insert(onConflict = OnConflictStrategy.Companion.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertQuestions(questions: List<QuestionEntity>)
 
     @Delete
@@ -25,4 +25,8 @@ interface IdeaDAO {
     @Transaction
     @Query("SELECT * FROM ideas WHERE user_id = :userId ORDER BY created_at DESC")
     fun getIdeasByUserId(userId: Int): Flow<List<IdeaWithQuestionsRelation>>
+
+    @Transaction
+    @Query("SELECT * FROM ideas WHERE user_id = :userId AND id = :ideaId")
+    fun getIdeaById(ideaId: Int, userId: Int): Flow<IdeaWithQuestionsRelation?>
 }
