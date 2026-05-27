@@ -4,6 +4,7 @@ import androidx.room.withTransaction
 import com.example.mindflow.data.local.entity.QuestionEntity
 import com.example.mindflow.data.local.room.dao.IdeaDAO
 import com.example.mindflow.data.local.room.database.AppDatabase
+import com.example.mindflow.data.mapper.toDomain
 import com.example.mindflow.data.mapper.toDto
 import com.example.mindflow.data.mapper.toEntity
 import com.example.mindflow.data.remote.datasource.IdeaProcessorDataSource
@@ -14,6 +15,7 @@ import com.example.mindflow.domain.model.Idea
 import com.example.mindflow.data.remote.dto.ProcessedIdeaDraftDTO
 import com.example.mindflow.domain.repository.IdeaRepository
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.map
 import java.time.Instant
 
 class IdeaRepositoryImp(
@@ -159,13 +161,15 @@ class IdeaRepositoryImp(
     }
 
     override fun getIdeasFlow(userId: Int): Flow<List<Idea>> {
-        TODO("Not yet implemented")
+        return ideaDao.getIdeasByUserId(userId).map{ list ->
+            list.map{ it.toDomain() }
+        }
     }
 
     override fun getIdeaById(
         ideaId: Int,
         userId: Int
     ): Flow<Idea?> {
-        TODO("Not yet implemented")
+        return ideaDao.getIdeaById(ideaId, userId).map{ it?.toDomain() }
     }
 }
