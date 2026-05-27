@@ -5,6 +5,6 @@ import com.example.mindflow.data.remote.dto.ProcessedIdeaDraftDTO
 
 interface IdeaRemoteDataSource {
     suspend fun saveIdea(processedIdeaDraftDTO: ProcessedIdeaDraftDTO, userId: Int): IdeaDTO
-    suspend fun updateIdea(ideaDTO: IdeaDTO): Unit
-    suspend fun deleteIdea(userId: Int): Unit
+    suspend fun updateIdea(ideaDTO: IdeaDTO)
+    suspend fun deleteIdea(userId: Int)
 }
