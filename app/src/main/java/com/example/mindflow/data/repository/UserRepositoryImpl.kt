@@ -95,13 +95,15 @@ class UserRepositoryImpl(
         }
     }
 
-    override suspend fun subscribeToPlan(userId: Int): Result<Unit> {
+    override suspend fun subscribeToPlan(userId: Int): Result<User> {
         return try {
             // Subscribe user to plan online
             userRemoteDataSource.subscribeToPlan(userId)
             // Set user has subscribed to plan locally
             userDao.updateSubscriptionStatus(userId, isSubscribed = true)
-            Result.success(Unit)
+            val user = userDao.getActiveUser() ?: return Result.failure(Exception("Ocurrió un error al tratar de obtener el usuario"))
+
+            Result.success(user.toDomain())
         } catch (e: Exception) {
             Result.failure(e)
         }

@@ -9,5 +9,5 @@ interface UserRepository {
     suspend fun validateCredentials(loginForm: LoginForm): Result<Unit>
     suspend fun getActiveSession(): User?
     suspend fun logOut(): Result<Unit>
-    suspend fun subscribeToPlan(userId: Int): Result<Unit>
+    suspend fun subscribeToPlan(userId: Int): Result<User>
 }
