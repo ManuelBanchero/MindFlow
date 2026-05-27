@@ -1,6 +1,6 @@
-package com.example.mindflow.data.remote.datasource.impl
+package com.example.mindflow.data.local.hardware.impl
 
-import com.example.mindflow.data.remote.datasource.SpeechToTextDataSource
+import com.example.mindflow.data.local.hardware.SpeechToTextDataSource
 
 class MockSpeechToTextDataSource(): SpeechToTextDataSource {
     override suspend fun transcribeAudio(audioFilePath: String): String {

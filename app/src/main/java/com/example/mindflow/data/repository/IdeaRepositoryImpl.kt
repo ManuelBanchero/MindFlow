@@ -9,7 +9,7 @@ import com.example.mindflow.data.mapper.toDto
 import com.example.mindflow.data.mapper.toEntity
 import com.example.mindflow.data.remote.datasource.IdeaProcessorDataSource
 import com.example.mindflow.data.remote.datasource.IdeaRemoteDataSource
-import com.example.mindflow.data.remote.datasource.SpeechToTextDataSource
+import com.example.mindflow.data.local.hardware.SpeechToTextDataSource
 import com.example.mindflow.data.remote.dto.IdeaDTO
 import com.example.mindflow.domain.model.Idea
 import com.example.mindflow.data.remote.dto.ProcessedIdeaDraftDTO
