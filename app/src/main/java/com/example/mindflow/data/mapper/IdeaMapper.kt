@@ -5,8 +5,11 @@ import com.example.mindflow.data.local.entity.IdeaEntity
 import com.example.mindflow.data.local.entity.IdeaWithQuestionsRelation
 import com.example.mindflow.data.local.entity.QuestionEntity
 import com.example.mindflow.data.remote.dto.IdeaDTO
+import com.example.mindflow.data.remote.dto.ProcessedIdeaDraftDTO
+import com.example.mindflow.data.remote.dto.ProcessedQuestionDraftDTO
 import com.example.mindflow.data.remote.dto.QuestionDTO
 import com.example.mindflow.domain.model.Idea
+import com.example.mindflow.domain.model.ProcessedIdeaDraft
 import com.example.mindflow.domain.model.Question
 import java.time.Instant
 
@@ -83,6 +86,17 @@ fun Question.toDto(): QuestionDTO {
     )
 }
 
+fun QuestionDTO.toEntity(): QuestionEntity {
+    return QuestionEntity(
+        id = this.id,
+        ideaId = this.ideaId,
+        category = this.category,
+        questionText = this.questionText,
+        description = this.description,
+        userAnswer = null // El DTO de la API no suele traer la respuesta del usuario
+    )
+}
+
 fun Idea.toDto(): IdeaDTO {
     return IdeaDTO(
         id = this.id,
@@ -95,5 +109,43 @@ fun Idea.toDto(): IdeaDTO {
         summarizeContent = this.summarizeContent,
         structuredIdea = this.structuredIdea,
         questions = this.questions.map { it.toDto() }
+    )
+}
+
+fun ProcessedQuestionDraftDTO.toDomain(): Question {
+    return Question(
+        id = 0,
+        ideaId = 0,
+        category = this.category,
+        questionText = this.questionText,
+        description = this.description
+    )
+}
+
+fun ProcessedIdeaDraftDTO.toDomain(): ProcessedIdeaDraft {
+    return ProcessedIdeaDraft(
+        title = this.title,
+        category = this.category,
+        summarizeContent = this.summarizeContent,
+        structuredIdea = this.structuredIdea,
+        questions = this.questions.map { it.toDomain() }
+    )
+}
+
+fun Question.toDraftDto(): ProcessedQuestionDraftDTO {
+    return ProcessedQuestionDraftDTO(
+        category = this.category,
+        questionText = this.questionText,
+        description = this.description
+    )
+}
+
+fun ProcessedIdeaDraft.toDto(): ProcessedIdeaDraftDTO {
+    return ProcessedIdeaDraftDTO(
+        title = this.title,
+        category = this.category,
+        summarizeContent = this.summarizeContent,
+        structuredIdea = this.structuredIdea,
+        questions = this.questions.map { it.toDraftDto() }
     )
 }

@@ -1,12 +1,12 @@
 package com.example.mindflow.domain.repository
 
 import com.example.mindflow.domain.model.Idea
-import com.example.mindflow.data.remote.dto.ProcessedIdeaDraftDTO
+import com.example.mindflow.domain.model.ProcessedIdeaResult
 import kotlinx.coroutines.flow.Flow
 
 interface IdeaRepository {
-    suspend fun processIdea(audioFilePath: String): Result<ProcessedIdeaDraftDTO>
-    suspend fun saveIdea(processedIdea: ProcessedIdeaDraftDTO, userId: Int): Result<Int> // Returns the new Idea id (the app need it to navigate to the Idea detail page)
+    suspend fun processIdea(audioFilePath: String): Result<ProcessedIdeaResult>
+    suspend fun saveIdea(processedIdea: ProcessedIdeaResult, userId: Int): Result<Int> // Returns the new Idea id (the app need it to navigate to the Idea detail page)
     suspend fun updateIdea(idea: Idea): Result<Unit>
     suspend fun deleteIdea(idea: Idea): Result<Unit>
     suspend fun expandIdea(idea: Idea, audioFilePath: String): Result<Unit>

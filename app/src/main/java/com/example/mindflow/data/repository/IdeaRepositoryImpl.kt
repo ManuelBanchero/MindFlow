@@ -13,6 +13,7 @@ import com.example.mindflow.data.remote.datasource.SpeechToTextDataSource
 import com.example.mindflow.data.remote.dto.IdeaDTO
 import com.example.mindflow.domain.model.Idea
 import com.example.mindflow.data.remote.dto.ProcessedIdeaDraftDTO
+import com.example.mindflow.domain.model.ProcessedIdeaResult
 import com.example.mindflow.domain.repository.IdeaRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -25,21 +26,31 @@ class IdeaRepositoryImpl(
    private val speechToTextDataSource: SpeechToTextDataSource,
    private val ideaProcessorDataSource: IdeaProcessorDataSource
 ): IdeaRepository {
-    override suspend fun processIdea(audioFilePath: String): Result<ProcessedIdeaDraftDTO> {
+    override suspend fun processIdea(audioFilePath: String): Result<ProcessedIdeaResult> {
         return try {
             val audioContent: String = speechToTextDataSource.transcribeAudio(audioFilePath)
-            val processedIdea = ideaProcessorDataSource.processRawText(audioContent)
+            val processedIdeaDto = ideaProcessorDataSource.processRawText(audioContent)
 
-            Result.success(processedIdea)
+            Result.success(
+                ProcessedIdeaResult(
+                    draft = processedIdeaDto.toDomain(),
+                    audioTranscribed = audioContent
+                )
+            )
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-    override suspend fun saveIdea(processedIdea: ProcessedIdeaDraftDTO, userId: Int): Result<Int> {
+    override suspend fun saveIdea(processedIdea: ProcessedIdeaResult, userId: Int): Result<Int> {
         return try {
+            val (draft, audioTranscribed) = processedIdea
             // Save it remotely
-            val idea: IdeaDTO = ideaRemoteDataSource.saveIdea(processedIdea, userId)
+            val idea: IdeaDTO = ideaRemoteDataSource.saveIdea(
+                draft.toDto(),
+                audioTranscribed,
+                userId
+            )
             // Save it locally
             database.withTransaction {
                 ideaDao.upsertIdea(idea.toEntity())
@@ -106,7 +117,7 @@ class IdeaRepositoryImpl(
                 textsAudiosHistory = idea.textsAudiosHistory + newIdeaContext,
                 summarizeContent = extendedIdea.summarizeContent,
                 structuredIdea = extendedIdea.structuredIdea,
-                questions = idea.questions + extendedIdea.questions
+                questions = idea.questions + extendedIdea.questions.map { it.toDomain()}
             )
             // Update idea remotely
             ideaRemoteDataSource.updateIdea(updatedIdea.toDto())
@@ -150,7 +161,7 @@ class IdeaRepositoryImpl(
             ideaRemoteDataSource.updateIdea(updatedIdea.toDto())
             // Update locally
             database.withTransaction {
-                ideaDao.upsertIdea(idea.toEntity())
+                ideaDao.upsertIdea(updatedIdea.toEntity())
                 ideaDao.deleteQuestionById(questionId)
             }
 
