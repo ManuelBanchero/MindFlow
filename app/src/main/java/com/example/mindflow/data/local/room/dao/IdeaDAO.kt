@@ -30,4 +30,10 @@ interface IdeaDAO {
     @Transaction
     @Query("SELECT * FROM ideas WHERE user_id = :userId AND id = :ideaId")
     fun getIdeaById(ideaId: Int, userId: Int): Flow<IdeaWithQuestionsRelation?>
+
+    @Query("SELECT * FROM questions WHERE id = :questionId")
+    suspend fun getQuestionById(questionId: Int): QuestionEntity?
+
+    @Query("DELETE FROM questions WHERE id = :questionId")
+    suspend fun deleteQuestionById(questionId: Int)
 }

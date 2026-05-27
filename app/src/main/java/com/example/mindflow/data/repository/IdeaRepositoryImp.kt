@@ -1,6 +1,7 @@
 package com.example.mindflow.data.repository
 
 import androidx.room.withTransaction
+import com.example.mindflow.data.local.entity.QuestionEntity
 import com.example.mindflow.data.local.room.dao.IdeaDAO
 import com.example.mindflow.data.local.room.database.AppDatabase
 import com.example.mindflow.data.mapper.toDto
@@ -102,7 +103,8 @@ class IdeaRepositoryImp(
                 category = extendedIdea.category,
                 textsAudiosHistory = idea.textsAudiosHistory + newIdeaContext,
                 summarizeContent = extendedIdea.summarizeContent,
-                structuredIdea = extendedIdea.structuredIdea
+                structuredIdea = extendedIdea.structuredIdea,
+                questions = idea.questions + extendedIdea.questions
             )
             // Update idea remotely
             ideaRemoteDataSource.updateIdea(updatedIdea.toDto())
@@ -123,7 +125,37 @@ class IdeaRepositoryImp(
         questionId: Int,
         audioFilePath: String
     ): Result<Unit> {
-        TODO("Not yet implemented")
+        return try {
+            val userAnswer = speechToTextDataSource.transcribeAudio(audioFilePath)
+            val question: QuestionEntity = ideaDao.getQuestionById(questionId)
+                ?: throw IllegalArgumentException("No se encontró la pregunta con ID $questionId")
+
+            val processedIdeaAfterAnswer = ideaProcessorDataSource.expandIdeaWithAnswerQuestion(
+                idea.title,
+                idea.structuredIdea,
+                question.questionText,
+                question.description,
+                userAnswer
+            )
+
+            // Create an updated idea
+            val updatedIdea: Idea = idea.copy(
+                summarizeContent = processedIdeaAfterAnswer.summarizeContent,
+                structuredIdea = processedIdeaAfterAnswer.structuredIdea
+            )
+
+            // Update remotely
+            ideaRemoteDataSource.updateIdea(updatedIdea.toDto())
+            // Update locally
+            database.withTransaction {
+                ideaDao.upsertIdea(idea.toEntity())
+                ideaDao.deleteQuestionById(questionId)
+            }
+
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
     }
 
     override fun getIdeasFlow(userId: Int): Flow<List<Idea>> {
