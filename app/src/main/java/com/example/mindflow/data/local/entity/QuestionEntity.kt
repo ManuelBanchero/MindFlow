@@ -17,8 +17,8 @@ import androidx.room.PrimaryKey
     ]
 )
 data class QuestionEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    @PrimaryKey()
+    val id: Int,
     @ColumnInfo(name = "idea_id")
     val ideaId: Int,
     val category: String,

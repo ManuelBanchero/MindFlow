@@ -6,8 +6,8 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "ideas")
 data class IdeaEntity(
-    @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    @PrimaryKey()
+    val id: Int,
     @ColumnInfo(name = "user_id")
     val userId: Int,
     val title: String,

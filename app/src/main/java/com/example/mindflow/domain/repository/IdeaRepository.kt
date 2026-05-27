@@ -13,7 +13,7 @@ interface IdeaRepository {
     suspend fun answerQuestion(
         idea: Idea,
         questionId: Int,
-        responseContent: String
+        audioFilePath: String
     ): Result<Unit>
 
     fun getIdeasFlow(userId: Int): Flow<List<Idea>>

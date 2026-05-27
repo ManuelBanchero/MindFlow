@@ -6,6 +6,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
+import androidx.room.Upsert
 import com.example.mindflow.data.local.entity.IdeaEntity
 import com.example.mindflow.data.local.entity.IdeaWithQuestionsRelation
 import com.example.mindflow.data.local.entity.QuestionEntity
@@ -13,11 +14,11 @@ import kotlinx.coroutines.flow.Flow
 
 @Dao
 interface IdeaDAO {
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertIdea(idea: IdeaEntity): Long
+    @Upsert
+    suspend fun upsertIdea(idea: IdeaEntity): Long
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertQuestions(questions: List<QuestionEntity>)
+    @Upsert
+    suspend fun upsertQuestions(questions: List<QuestionEntity>)
 
     @Delete
     suspend fun deleteIdea(idea: IdeaEntity)

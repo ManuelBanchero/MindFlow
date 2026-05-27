@@ -1,6 +1,8 @@
 package com.example.mindflow.data.repository
 
+import androidx.room.withTransaction
 import com.example.mindflow.data.local.room.dao.IdeaDAO
+import com.example.mindflow.data.local.room.database.AppDatabase
 import com.example.mindflow.data.mapper.toDto
 import com.example.mindflow.data.mapper.toEntity
 import com.example.mindflow.data.remote.datasource.IdeaProcessorDataSource
@@ -14,6 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import java.time.Instant
 
 class IdeaRepositoryImp(
+   private val database: AppDatabase,
    private val ideaDao: IdeaDAO,
    private val ideaRemoteDataSource: IdeaRemoteDataSource,
    private val speechToTextDataSource: SpeechToTextDataSource,
@@ -35,10 +38,12 @@ class IdeaRepositoryImp(
             // Save it remotely
             val idea: IdeaDTO = ideaRemoteDataSource.saveIdea(processedIdea, userId)
             // Save it locally
-            ideaDao.insertIdea(idea.toEntity())
-            ideaDao.insertQuestions(
-                idea.questions.map({ it.toEntity()} )
-            )
+            database.withTransaction {
+                ideaDao.upsertIdea(idea.toEntity())
+                ideaDao.upsertQuestions(
+                    idea.questions.map({ it.toEntity()} )
+                )
+            }
 
             Result.success(idea.id)
         } catch (e: Exception) {
@@ -51,10 +56,12 @@ class IdeaRepositoryImp(
             // Update it remotely
             ideaRemoteDataSource.updateIdea(idea.toDto())
             // Update it locally
-            ideaDao.insertIdea(idea.toEntity())
-            ideaDao.insertQuestions(
-                idea.questions.map({ it.toEntity() })
-            )
+            database.withTransaction {
+                ideaDao.upsertIdea(idea.toEntity())
+                ideaDao.upsertQuestions(
+                    idea.questions.map({ it.toEntity() })
+                )
+            }
 
             Result.success(Unit)
         } catch (e: Exception) {
@@ -100,8 +107,10 @@ class IdeaRepositoryImp(
             // Update idea remotely
             ideaRemoteDataSource.updateIdea(updatedIdea.toDto())
             // Update idea locally
-            ideaDao.insertIdea(updatedIdea.toEntity())
-            ideaDao.insertQuestions(updatedIdea.questions.map({ it.toEntity() }))
+            database.withTransaction {
+                ideaDao.upsertIdea(updatedIdea.toEntity())
+                ideaDao.upsertQuestions(updatedIdea.questions.map({ it.toEntity() }))
+            }
 
             Result.success(Unit)
         } catch (e: Exception) {
@@ -112,7 +121,7 @@ class IdeaRepositoryImp(
     override suspend fun answerQuestion(
         idea: Idea,
         questionId: Int,
-        responseContent: String
+        audioFilePath: String
     ): Result<Unit> {
         TODO("Not yet implemented")
     }
