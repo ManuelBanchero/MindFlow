@@ -1,5 +1,6 @@
 package com.example.mindflow.data.repository
 
+import android.net.Uri
 import androidx.room.withTransaction
 import com.example.mindflow.data.local.entity.QuestionEntity
 import com.example.mindflow.data.local.room.dao.IdeaDAO
@@ -26,9 +27,9 @@ class IdeaRepositoryImpl(
    private val speechToTextDataSource: SpeechToTextDataSource,
    private val ideaProcessorDataSource: IdeaProcessorDataSource
 ): IdeaRepository {
-    override suspend fun processIdea(audioFilePath: String): Result<ProcessedIdeaResult> {
+    override suspend fun processIdea(audioUri: Uri): Result<ProcessedIdeaResult> {
         return try {
-            val audioContent: String = speechToTextDataSource.transcribeAudio(audioFilePath)
+            val audioContent: String = speechToTextDataSource.transcribeAudio(audioUri)
             val processedIdeaDto = ideaProcessorDataSource.processRawText(audioContent)
 
             Result.success(
@@ -98,11 +99,11 @@ class IdeaRepositoryImpl(
 
     override suspend fun expandIdea(
         idea: Idea,
-        audioFilePath: String
+        audioUri: Uri
     ): Result<Unit> {
         return try {
             // Get new context
-            val newIdeaContext = speechToTextDataSource.transcribeAudio(audioFilePath)
+            val newIdeaContext = speechToTextDataSource.transcribeAudio(audioUri)
             // Expand idea
             val extendedIdea: ProcessedIdeaDraftDTO = ideaProcessorDataSource.expandIdeaWithNewContext(
                 idea.title,
@@ -136,10 +137,10 @@ class IdeaRepositoryImpl(
     override suspend fun answerQuestion(
         idea: Idea,
         questionId: Int,
-        audioFilePath: String
+        audioUri: Uri
     ): Result<Unit> {
         return try {
-            val userAnswer = speechToTextDataSource.transcribeAudio(audioFilePath)
+            val userAnswer = speechToTextDataSource.transcribeAudio(audioUri)
             val question: QuestionEntity = ideaDao.getQuestionById(questionId)
                 ?: throw IllegalArgumentException("No se encontró la pregunta con ID $questionId")
 

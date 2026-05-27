@@ -1,5 +1,7 @@
 package com.example.mindflow.data.local.hardware
 
+import android.net.Uri
+
 interface SpeechToTextDataSource {
-    suspend fun transcribeAudio(audioFilePath: String): String
+    suspend fun transcribeAudio(audioUri: Uri): String
 }
