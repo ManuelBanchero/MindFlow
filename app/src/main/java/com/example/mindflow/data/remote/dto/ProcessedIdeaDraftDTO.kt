@@ -3,28 +3,17 @@ package com.example.mindflow.data.remote.dto
 import com.example.mindflow.domain.model.Question
 import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.Serializable
-import java.time.Instant
 
 @Serializable
-data class IdeaDTO(
-    @SerializedName("id")
-    val id: Int,
-    @SerializedName("user_id")
-    val userId: Int,
+data class ProcessedIdeaDraftDTO(
     @SerializedName("title")
     val title: String,
-    @SerializedName("created_at")
-    val createdAt: Instant,
-    @SerializedName("updated_at")
-    val updatedAt: Instant,
     @SerializedName("category")
     val category: String,
-    @SerializedName("texts_audio_history")
-    val textsAudioHistory: List<String>,
     @SerializedName("summarize_content")
     val summarizeContent: String,
     @SerializedName("structured_idea")
     val structuredIdea: String,
     @SerializedName("questions")
     val questions: List<Question>
-    )
+)

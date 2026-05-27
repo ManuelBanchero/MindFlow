@@ -1,7 +1,12 @@
 package com.example.mindflow.data.remote.datasource
 
-import com.example.mindflow.domain.model.ProcessedIdeaDraft
+import com.example.mindflow.data.remote.dto.ProcessedIdeaDraftDTO
 
 interface IdeaProcessorDataSource {
-    suspend fun processRawText(text: String): ProcessedIdeaDraft
+    suspend fun processRawText(text: String): ProcessedIdeaDraftDTO
+    suspend fun expandIdeaWithNewContext(
+        ideaTitle: String,
+        ideaContent: String,
+        newContext: String
+    ): ProcessedIdeaDraftDTO
 }

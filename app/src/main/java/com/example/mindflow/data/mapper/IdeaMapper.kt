@@ -73,3 +73,18 @@ fun IdeaDTO.toEntity(): IdeaEntity {
         structuredIdea = this.structuredIdea
     )
 }
+
+fun Idea.toDto(): IdeaDTO {
+    return IdeaDTO(
+        id = this.id,
+        userId = this.userId,
+        title = this.title,
+        createdAt = this.createdAt,
+        updatedAt = this.updatedAt,
+        category = this.category,
+        textsAudioHistory = this.textsAudiosHistory,
+        summarizeContent = this.summarizeContent,
+        structuredIdea = this.structuredIdea,
+        questions = this.questions
+    )
+}

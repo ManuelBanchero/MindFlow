@@ -1,8 +1,10 @@
 package com.example.mindflow.data.remote.datasource
 
 import com.example.mindflow.data.remote.dto.IdeaDTO
-import com.example.mindflow.domain.model.ProcessedIdeaDraft
+import com.example.mindflow.data.remote.dto.ProcessedIdeaDraftDTO
 
 interface IdeaRemoteDataSource {
-    suspend fun saveIdea(processedIdeaDraft: ProcessedIdeaDraft, userId: Int): IdeaDTO
+    suspend fun saveIdea(processedIdeaDraftDTO: ProcessedIdeaDraftDTO, userId: Int): IdeaDTO
+    suspend fun updateIdea(ideaDTO: IdeaDTO): Unit
+    suspend fun deleteIdea(userId: Int): Unit
 }
