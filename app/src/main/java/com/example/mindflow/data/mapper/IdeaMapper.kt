@@ -5,6 +5,7 @@ import com.example.mindflow.data.local.entity.IdeaEntity
 import com.example.mindflow.data.local.entity.IdeaWithQuestionsRelation
 import com.example.mindflow.data.local.entity.QuestionEntity
 import com.example.mindflow.data.remote.dto.IdeaDTO
+import com.example.mindflow.data.remote.dto.QuestionDTO
 import com.example.mindflow.domain.model.Idea
 import com.example.mindflow.domain.model.Question
 import java.time.Instant
@@ -72,6 +73,16 @@ fun IdeaDTO.toEntity(): IdeaEntity {
     )
 }
 
+fun Question.toDto(): QuestionDTO {
+    return QuestionDTO(
+        id = this.id,
+        ideaId = this.ideaId,
+        category = this.category,
+        questionText = this.questionText,
+        description = this.description
+    )
+}
+
 fun Idea.toDto(): IdeaDTO {
     return IdeaDTO(
         id = this.id,
@@ -83,6 +94,6 @@ fun Idea.toDto(): IdeaDTO {
         textsAudioHistory = this.textsAudiosHistory,
         summarizeContent = this.summarizeContent,
         structuredIdea = this.structuredIdea,
-        questions = this.questions
+        questions = this.questions.map { it.toDto() }
     )
 }

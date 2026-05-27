@@ -1,19 +1,18 @@
 package com.example.mindflow.data.remote.dto
 
-import com.example.mindflow.domain.model.Question
-import com.google.gson.annotations.SerializedName
+import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
 data class ProcessedIdeaDraftDTO(
-    @SerializedName("title")
+    @SerialName("title")
     val title: String,
-    @SerializedName("category")
+    @SerialName("category")
     val category: String,
-    @SerializedName("summarize_content")
+    @SerialName("summarize_content")
     val summarizeContent: String,
-    @SerializedName("structured_idea")
+    @SerialName("structured_idea")
     val structuredIdea: String,
-    @SerializedName("questions")
-    val questions: List<Question>
+    @SerialName("questions")
+    val questions: List<ProcessedQuestionDraftDTO>
 )

@@ -3,6 +3,13 @@ package com.example.mindflow.data.remote.datasource.impl
 import com.example.mindflow.data.remote.datasource.IdeaProcessorDataSource
 import com.example.mindflow.data.remote.dto.ProcessedAnswerQuestionDTO
 import com.example.mindflow.data.remote.dto.ProcessedIdeaDraftDTO
+import com.example.mindflow.data.remote.dto.QuestionDTO
+
+val ideas: List<ProcessedIdeaDraftDTO> = listOf(
+    ProcessedIdeaDraftDTO(
+
+    )
+)
 
 class MockIdeaProcessorDataSource(): IdeaProcessorDataSource{
     override suspend fun processRawText(text: String): ProcessedIdeaDraftDTO {
