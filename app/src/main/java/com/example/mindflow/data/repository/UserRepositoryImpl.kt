@@ -2,7 +2,6 @@ package com.example.mindflow.data.repository
 
 import android.database.sqlite.SQLiteException
 import retrofit2.HttpException
-import com.example.mindflow.data.local.entity.UserEntity
 import com.example.mindflow.data.local.room.dao.UserDAO
 import com.example.mindflow.data.mapper.toDomain
 import com.example.mindflow.data.mapper.toEntity
@@ -17,7 +16,7 @@ import com.example.mindflow.domain.model.param.LoginForm
 import com.example.mindflow.domain.repository.UserRepository
 import java.io.IOException
 
-class UserRepositoryImp(
+class UserRepositoryImpl(
     private val userDao: UserDAO,
     private val userRemoteDataSource: UserRemoteDataSource
 ): UserRepository {

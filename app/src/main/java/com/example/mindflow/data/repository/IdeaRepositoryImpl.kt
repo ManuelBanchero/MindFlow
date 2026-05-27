@@ -18,7 +18,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.time.Instant
 
-class IdeaRepositoryImp(
+class IdeaRepositoryImpl(
    private val database: AppDatabase,
    private val ideaDao: IdeaDAO,
    private val ideaRemoteDataSource: IdeaRemoteDataSource,

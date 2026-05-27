@@ -1,11 +1,11 @@
-package com.example.mindflow.data.remote.datasource.imp
+package com.example.mindflow.data.remote.datasource.impl
 
 import com.example.mindflow.data.remote.datasource.UserRemoteDataSource
 import com.example.mindflow.data.remote.dto.RegisterRequest
 import com.example.mindflow.data.remote.dto.LoginRequest
 import com.example.mindflow.data.remote.dto.UserDTO
 
-class UserMockDataSourceImp: UserRemoteDataSource {
+class MockUserRemoteDataSource: UserRemoteDataSource {
     override suspend fun register(registerRequest: RegisterRequest): UserDTO {
         return UserDTO(
             id = 1,
