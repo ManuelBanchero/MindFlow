@@ -27,7 +27,7 @@ class IdeaRepositoryImpl(
    private val speechToTextDataSource: SpeechToTextDataSource,
    private val ideaProcessorDataSource: IdeaProcessorDataSource
 ): IdeaRepository {
-    override suspend fun processIdea(audioUri: Uri): Result<ProcessedIdeaResult> {
+    override suspend fun processIdea(audioUri: String): Result<ProcessedIdeaResult> {
         return try {
             val audioContent: String = speechToTextDataSource.transcribeAudio(audioUri)
             val processedIdeaDto = ideaProcessorDataSource.processRawText(audioContent)
@@ -99,7 +99,7 @@ class IdeaRepositoryImpl(
 
     override suspend fun expandIdea(
         idea: Idea,
-        audioUri: Uri
+        audioUri: String
     ): Result<Unit> {
         return try {
             // Get new context
@@ -137,7 +137,7 @@ class IdeaRepositoryImpl(
     override suspend fun answerQuestion(
         idea: Idea,
         questionId: Int,
-        audioUri: Uri
+        audioUri: String
     ): Result<Unit> {
         return try {
             val userAnswer = speechToTextDataSource.transcribeAudio(audioUri)
