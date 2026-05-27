@@ -1,6 +1,5 @@
 package com.example.mindflow.data.mapper
 
-import androidx.compose.ui.util.fastJoinToString
 import com.example.mindflow.data.local.entity.IdeaEntity
 import com.example.mindflow.data.local.entity.IdeaWithQuestionsRelation
 import com.example.mindflow.data.local.entity.QuestionEntity
@@ -93,7 +92,6 @@ fun QuestionDTO.toEntity(): QuestionEntity {
         category = this.category,
         questionText = this.questionText,
         description = this.description,
-        userAnswer = null // El DTO de la API no suele traer la respuesta del usuario
     )
 }
 

@@ -25,6 +25,4 @@ data class QuestionEntity(
     @ColumnInfo(name = "question_text")
     val questionText: String,
     val description: String,
-    @ColumnInfo(name = "user_answer")
-    val userAnswer: String? = null
 )
