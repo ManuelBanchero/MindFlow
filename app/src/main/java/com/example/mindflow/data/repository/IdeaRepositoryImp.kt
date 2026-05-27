@@ -44,7 +44,7 @@ class IdeaRepositoryImp(
             database.withTransaction {
                 ideaDao.upsertIdea(idea.toEntity())
                 ideaDao.upsertQuestions(
-                    idea.questions.map({ it.toEntity()} )
+                    idea.questions.map{ it.toEntity()}
                 )
             }
 
@@ -62,7 +62,7 @@ class IdeaRepositoryImp(
             database.withTransaction {
                 ideaDao.upsertIdea(idea.toEntity())
                 ideaDao.upsertQuestions(
-                    idea.questions.map({ it.toEntity() })
+                    idea.questions.map{ it.toEntity() }
                 )
             }
 
@@ -113,7 +113,7 @@ class IdeaRepositoryImp(
             // Update idea locally
             database.withTransaction {
                 ideaDao.upsertIdea(updatedIdea.toEntity())
-                ideaDao.upsertQuestions(updatedIdea.questions.map({ it.toEntity() }))
+                ideaDao.upsertQuestions(updatedIdea.questions.map{ it.toEntity() })
             }
 
             Result.success(Unit)
