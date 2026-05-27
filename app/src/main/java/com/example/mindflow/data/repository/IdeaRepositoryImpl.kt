@@ -19,6 +19,7 @@ import com.example.mindflow.domain.repository.IdeaRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.time.Instant
+import androidx.core.net.toUri
 
 class IdeaRepositoryImpl(
    private val database: AppDatabase,
@@ -29,7 +30,9 @@ class IdeaRepositoryImpl(
 ): IdeaRepository {
     override suspend fun processIdea(audioUri: String): Result<ProcessedIdeaResult> {
         return try {
-            val audioContent: String = speechToTextDataSource.transcribeAudio(audioUri)
+            // Transform uri string to Uri
+            val uri: Uri = audioUri.toUri()
+            val audioContent: String = speechToTextDataSource.transcribeAudio(uri)
             val processedIdeaDto = ideaProcessorDataSource.processRawText(audioContent)
 
             Result.success(
@@ -102,8 +105,10 @@ class IdeaRepositoryImpl(
         audioUri: String
     ): Result<Unit> {
         return try {
+            // Transform uri string to uri
+            val uri: Uri = audioUri.toUri()
             // Get new context
-            val newIdeaContext = speechToTextDataSource.transcribeAudio(audioUri)
+            val newIdeaContext = speechToTextDataSource.transcribeAudio(uri)
             // Expand idea
             val extendedIdea: ProcessedIdeaDraftDTO = ideaProcessorDataSource.expandIdeaWithNewContext(
                 idea.title,
@@ -140,7 +145,10 @@ class IdeaRepositoryImpl(
         audioUri: String
     ): Result<Unit> {
         return try {
-            val userAnswer = speechToTextDataSource.transcribeAudio(audioUri)
+            // Transform uri string to uri
+            val uri: Uri = audioUri.toUri()
+
+            val userAnswer = speechToTextDataSource.transcribeAudio(uri)
             val question: QuestionEntity = ideaDao.getQuestionById(questionId)
                 ?: throw IllegalArgumentException("No se encontró la pregunta con ID $questionId")
 

@@ -8,6 +8,9 @@ class CreateIdeaUseCase(
     private val ideaRepository: IdeaRepository
 ) {
     suspend operator fun invoke(audioUri: String): Result<Int> {
+        if (audioUri.isBlank())
+            return Result.failure(Exception("La dirección de archivo de audio no es válida"))
+
         val processedIdea = ideaRepository.processIdea(audioUri).getOrElse {
             return Result.failure(Exception("Ocurrió un error al intentar procesar la idea"))
         }
