@@ -15,8 +15,7 @@ fun QuestionEntity.toDomain(): Question {
         ideaId = this.ideaId,
         category = this.category,
         questionText = this.questionText,
-        description = this.description,
-        userAnswer = this.userAnswer
+        description = this.description
     )
 }
 
@@ -56,7 +55,6 @@ fun Question.toEntity(): QuestionEntity {
         category = this.category,
         questionText = this.questionText,
         description = this.description,
-        userAnswer = this.userAnswer
     )
 }
 
