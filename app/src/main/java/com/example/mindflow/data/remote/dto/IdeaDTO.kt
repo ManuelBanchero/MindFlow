@@ -2,7 +2,6 @@ package com.example.mindflow.data.remote.dto
 
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
-import java.time.Instant
 
 @Serializable
 data class IdeaDTO(
@@ -13,9 +12,9 @@ data class IdeaDTO(
     @SerialName("title")
     val title: String,
     @SerialName("created_at")
-    val createdAt: Instant,
+    val createdAt: Long,
     @SerialName("updated_at")
-    val updatedAt: Instant,
+    val updatedAt: Long,
     @SerialName("category")
     val category: String,
     @SerialName("texts_audio_history")

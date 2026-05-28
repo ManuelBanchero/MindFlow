@@ -12,6 +12,8 @@ import com.example.mindflow.domain.model.ProcessedIdeaDraft
 import com.example.mindflow.domain.model.Question
 import java.time.Instant
 
+// --- Entity -> Domain ---
+
 fun QuestionEntity.toDomain(): Question {
     return Question(
         id = this.id,
@@ -27,6 +29,7 @@ fun IdeaWithQuestionsRelation.toDomain(): Idea {
         id = this.idea.id,
         userId = this.idea.userId,
         title = this.idea.title,
+        // De Long (DB) a Instant (Dominio)
         createdAt = Instant.ofEpochMilli(this.idea.createdAt),
         updatedAt = Instant.ofEpochMilli(this.idea.updatedAt),
         category = this.idea.category,
@@ -37,11 +40,14 @@ fun IdeaWithQuestionsRelation.toDomain(): Idea {
     )
 }
 
+// --- Domain -> Entity ---
+
 fun Idea.toEntity(): IdeaEntity {
     return IdeaEntity(
         id = this.id,
         userId = this.userId,
         title = this.title,
+        // De Instant (Dominio) a Long (DB)
         createdAt = this.createdAt.toEpochMilli(),
         updatedAt = this.updatedAt.toEpochMilli(),
         category = this.category,
@@ -61,27 +67,20 @@ fun Question.toEntity(): QuestionEntity {
     )
 }
 
+// --- DTO -> Entity ---
+
 fun IdeaDTO.toEntity(): IdeaEntity {
     return IdeaEntity(
         id = this.id,
         userId = this.userId,
         title = this.title,
-        createdAt = this.createdAt.toEpochMilli(),
-        updatedAt = this.updatedAt.toEpochMilli(),
+        // Ambos son Long, paso directo
+        createdAt = this.createdAt,
+        updatedAt = this.updatedAt,
         category = this.category,
         textsAudioHistory = this.textsAudioHistory.joinToString("\n\n"),
         summarizeContent = this.summarizeContent,
         structuredIdea = this.structuredIdea
-    )
-}
-
-fun Question.toDto(): QuestionDTO {
-    return QuestionDTO(
-        id = this.id,
-        ideaId = this.ideaId,
-        category = this.category,
-        questionText = this.questionText,
-        description = this.description
     )
 }
 
@@ -95,13 +94,26 @@ fun QuestionDTO.toEntity(): QuestionEntity {
     )
 }
 
+// --- Domain -> DTO ---
+
+fun Question.toDto(): QuestionDTO {
+    return QuestionDTO(
+        id = this.id,
+        ideaId = this.ideaId,
+        category = this.category,
+        questionText = this.questionText,
+        description = this.description
+    )
+}
+
 fun Idea.toDto(): IdeaDTO {
     return IdeaDTO(
         id = this.id,
         userId = this.userId,
         title = this.title,
-        createdAt = this.createdAt,
-        updatedAt = this.updatedAt,
+        // Convertimos Instant a Long para el DTO
+        createdAt = this.createdAt.toEpochMilli(),
+        updatedAt = this.updatedAt.toEpochMilli(),
         category = this.category,
         textsAudioHistory = this.textsAudiosHistory,
         summarizeContent = this.summarizeContent,
@@ -109,6 +121,8 @@ fun Idea.toDto(): IdeaDTO {
         questions = this.questions.map { it.toDto() }
     )
 }
+
+// --- Drafts mappings ---
 
 fun ProcessedQuestionDraftDTO.toDomain(): Question {
     return Question(

@@ -3,6 +3,7 @@ package com.example.mindflow.data.local.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 @Entity(
@@ -12,9 +13,10 @@ import androidx.room.PrimaryKey
             entity = IdeaEntity::class,
             parentColumns = ["id"],
             childColumns = ["idea_id"],
-            onDelete = ForeignKey.CASCADE // Si se borra la idea se borran las preguntas
+            onDelete = ForeignKey.CASCADE // If an idea is deleted, all questions associated too
         )
-    ]
+    ],
+    indices = [Index(value = ["idea_id"])] // Create an index makes the deletion faster
 )
 data class QuestionEntity(
     @PrimaryKey()

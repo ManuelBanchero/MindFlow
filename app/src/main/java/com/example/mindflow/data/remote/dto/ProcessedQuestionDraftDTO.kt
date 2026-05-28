@@ -1,6 +1,5 @@
 package com.example.mindflow.data.remote.dto
 
-import com.google.gson.annotations.SerializedName
 import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
@@ -10,6 +9,6 @@ data class ProcessedQuestionDraftDTO(
     val category: String,
     @SerialName("question_text")
     val questionText: String,
-    @SerializedName("description")
+    @SerialName("description")
     val description: String
 )
