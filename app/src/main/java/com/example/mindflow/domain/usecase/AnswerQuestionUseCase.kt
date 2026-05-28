@@ -2,6 +2,7 @@ package com.example.mindflow.domain.usecase
 
 import com.example.mindflow.domain.model.Idea
 import com.example.mindflow.domain.repository.IdeaRepository
+import javax.inject.Inject
 
 class AnswerQuestionUseCase @Inject constructor(
     private val ideaRepository: IdeaRepository

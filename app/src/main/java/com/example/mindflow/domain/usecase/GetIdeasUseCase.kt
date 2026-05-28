@@ -8,8 +8,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
+import javax.inject.Inject
 
-class GetIdeasUseCase(
+class GetIdeasUseCase @Inject constructor(
     private val userRepository: UserRepository,
     private val ideaRepository: IdeaRepository
 ) {

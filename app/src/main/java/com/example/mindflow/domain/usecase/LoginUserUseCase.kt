@@ -3,8 +3,9 @@ package com.example.mindflow.domain.usecase
 import com.example.mindflow.domain.model.param.LoginForm
 import com.example.mindflow.domain.repository.UserRepository
 import com.example.mindflow.domain.validator.AuthValidator
+import javax.inject.Inject
 
-class LoginUserUseCase(
+class LoginUserUseCase @Inject constructor(
     private val userRepository: UserRepository
 ) {
     suspend operator fun invoke(form: LoginForm): Result<Unit> {

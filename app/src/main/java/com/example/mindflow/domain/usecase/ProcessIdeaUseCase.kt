@@ -2,8 +2,9 @@ package com.example.mindflow.domain.usecase
 
 import com.example.mindflow.domain.repository.IdeaRepository
 import com.example.mindflow.domain.repository.UserRepository
+import javax.inject.Inject
 
-class CreateIdeaUseCase(
+class CreateIdeaUseCase @Inject constructor(
     private val userRepository: UserRepository,
     private val ideaRepository: IdeaRepository
 ) {

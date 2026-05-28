@@ -2,8 +2,9 @@ package com.example.mindflow.domain.usecase
 
 import com.example.mindflow.domain.model.Idea
 import com.example.mindflow.domain.repository.IdeaRepository
+import javax.inject.Inject
 
-class ExpandIdeaUseCase(
+class ExpandIdeaUseCase @Inject constructor(
     private val ideaRepository: IdeaRepository
 ) {
     suspend operator fun invoke(
