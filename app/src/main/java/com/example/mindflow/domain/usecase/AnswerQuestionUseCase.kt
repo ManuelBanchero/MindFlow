@@ -3,7 +3,7 @@ package com.example.mindflow.domain.usecase
 import com.example.mindflow.domain.model.Idea
 import com.example.mindflow.domain.repository.IdeaRepository
 
-class AnswerQuestionUserCase(
+class AnswerQuestionUseCase @Inject constructor(
     private val ideaRepository: IdeaRepository
 ) {
     suspend operator fun invoke(
