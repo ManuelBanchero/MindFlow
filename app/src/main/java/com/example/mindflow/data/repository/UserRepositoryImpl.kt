@@ -15,8 +15,9 @@ import com.example.mindflow.domain.model.param.RegistrationForm
 import com.example.mindflow.domain.model.param.LoginForm
 import com.example.mindflow.domain.repository.UserRepository
 import java.io.IOException
+import javax.inject.Inject
 
-class UserRepositoryImpl(
+class UserRepositoryImpl @Inject constructor(
     private val userDao: UserDAO,
     private val userRemoteDataSource: UserRemoteDataSource
 ): UserRepository {

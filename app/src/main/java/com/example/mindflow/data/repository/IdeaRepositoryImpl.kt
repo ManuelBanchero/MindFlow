@@ -20,8 +20,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import java.time.Instant
 import androidx.core.net.toUri
+import javax.inject.Inject
 
-class IdeaRepositoryImpl(
+class IdeaRepositoryImpl @Inject constructor(
    private val database: AppDatabase,
    private val ideaDao: IdeaDAO,
    private val ideaRemoteDataSource: IdeaRemoteDataSource,
