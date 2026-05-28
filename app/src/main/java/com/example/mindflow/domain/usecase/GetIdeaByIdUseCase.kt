@@ -9,20 +9,20 @@ import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 
-class GetIdeasUseCase(
+class GetIdeaByIdUseCase(
     private val userRepository: UserRepository,
     private val ideaRepository: IdeaRepository
 ) {
     @OptIn(ExperimentalCoroutinesApi::class)
-    operator fun invoke(): Flow<List<Idea>> {
+    operator fun invoke(ideaId: Int): Flow<Idea?> {
         return flow {
             val user = userRepository.getActiveSession()
             emit(user)
         }.flatMapLatest { user ->
             if (user != null) {
-                ideaRepository.getIdeasFlow(user.id)
+                ideaRepository.getIdeaById(ideaId, user.id)
             } else {
-                flowOf(emptyList())
+                flowOf(null)
             }
         }
     }
