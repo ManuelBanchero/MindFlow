@@ -10,14 +10,14 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 
 @Composable
 fun LoginScreen(
-    onNavigateToMainPage: () -> Unit,
+    onLoginSuccess: () -> Unit,
     viewModel: LoginViewModel
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
 
     LaunchedEffect(uiState.isLoginSuccess) {
         if (uiState.isLoginSuccess) {
-            onNavigateToMainPage()
+            onLoginSuccess()
         }
     }
 
