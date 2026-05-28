@@ -5,9 +5,9 @@ import com.example.mindflow.data.remote.dto.ProcessedAnswerQuestionDTO
 import com.example.mindflow.data.remote.dto.ProcessedIdeaDraftDTO
 import com.example.mindflow.data.remote.dto.ProcessedQuestionDraftDTO
 import kotlinx.coroutines.delay
-import kotlin.random.Random
+import javax.inject.Inject
 
-class MockIdeaProcessorDataSourceImpl : IdeaProcessorDataSource {
+class MockIdeaProcessorDataSourceImpl @Inject constructor() : IdeaProcessorDataSource {
 
     override suspend fun processRawText(text: String): ProcessedIdeaDraftDTO {
         // Simulating an API response

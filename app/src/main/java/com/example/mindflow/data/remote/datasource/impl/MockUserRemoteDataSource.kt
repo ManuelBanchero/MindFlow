@@ -4,8 +4,9 @@ import com.example.mindflow.data.remote.datasource.UserRemoteDataSource
 import com.example.mindflow.data.remote.dto.RegisterRequest
 import com.example.mindflow.data.remote.dto.LoginRequest
 import com.example.mindflow.data.remote.dto.UserDTO
+import javax.inject.Inject
 
-class MockUserRemoteDataSource: UserRemoteDataSource {
+class MockUserRemoteDataSource @Inject constructor(): UserRemoteDataSource {
     override suspend fun register(registerRequest: RegisterRequest): UserDTO {
         return UserDTO(
             id = 1,

@@ -5,8 +5,9 @@ import com.example.mindflow.data.remote.dto.IdeaDTO
 import com.example.mindflow.data.remote.dto.ProcessedIdeaDraftDTO
 import com.example.mindflow.data.remote.dto.QuestionDTO
 import java.time.Instant
+import javax.inject.Inject
 
-class MockIdeaRemoteDataSource(): IdeaRemoteDataSource {
+class MockIdeaRemoteDataSource @Inject constructor(): IdeaRemoteDataSource {
     override suspend fun saveIdea(
         processedIdeaDraftDTO: ProcessedIdeaDraftDTO,
         audioTranscribed: String,
