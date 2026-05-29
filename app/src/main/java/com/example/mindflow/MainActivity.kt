@@ -6,11 +6,13 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.mindflow.ui.presentation.createidea.CreateIdeaScreen
 import com.example.mindflow.ui.presentation.idealist.IdeaListScreen
 import com.example.mindflow.ui.presentation.login.LoginScreen
 import com.example.mindflow.ui.theme.MindFlowTheme
@@ -41,8 +43,19 @@ fun MindFlowAppNavigation() {
         composable("login") {
             LoginScreen(
                 onLoginSuccess = {
-                    navController.navigate("idea_list") {
+                    navController.navigate("create_idea") {
                         popUpTo("login") { inclusive = true }
+                    }
+                },
+                viewModel = hiltViewModel()
+            )
+        }
+
+        composable("create_idea") {
+            CreateIdeaScreen(
+                onCreateIdeaSuccess = {
+                    navController.navigate("idea_list") {
+                        popUpTo("create_idea") { inclusive = true }
                     }
                 },
                 viewModel = hiltViewModel()

@@ -34,7 +34,7 @@ class LoginViewModel @Inject constructor(
     // Public not mutable state
     val uiState: StateFlow<LoginUiState> = _uiState.asStateFlow()
 
-    // Public methods to interact w/Views
+    // Public methods to interact w/View
     fun onEvent(event: LoginEvent) {
         when (event) {
             is LoginEvent.EmailChanged -> {
