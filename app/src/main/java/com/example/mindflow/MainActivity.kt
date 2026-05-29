@@ -4,13 +4,17 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.example.mindflow.ui.presentation.createidea.CreateIdeaScreen
+import com.example.mindflow.ui.presentation.idealist.IdeaListScreen
+import com.example.mindflow.ui.presentation.login.LoginScreen
 import com.example.mindflow.ui.theme.MindFlowTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -21,29 +25,60 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             MindFlowTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                MindFlowAppNavigation()
             }
         }
     }
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
-}
+fun MindFlowAppNavigation() {
+    val navController = rememberNavController()
 
-@Preview(showBackground = true)
-@Composable
-fun GreetingPreview() {
-    MindFlowTheme {
-        Greeting("Android")
+    NavHost(
+        navController = navController,
+        startDestination = "login"
+    ) {
+        // Pantalla de Login
+        composable("login") {
+            LoginScreen(
+                onLoginSuccess = {
+                    navController.navigate("create_idea") {
+                        popUpTo("login") { inclusive = true }
+                    }
+                },
+                viewModel = hiltViewModel()
+            )
+        }
+
+        composable("create_idea") {
+            CreateIdeaScreen(
+                onCreateIdeaSuccess = {
+                    navController.navigate("idea_list") {
+                        popUpTo("create_idea") { inclusive = true }
+                    }
+                },
+                viewModel = hiltViewModel()
+            )
+        }
+
+        // Pantalla de Lista de Ideas
+        composable("idea_list") {
+            IdeaListScreen(
+                onNavigateToIdeaDetail = { ideaId ->
+                    navController.navigate("idea_detail/$ideaId")
+                },
+                viewModel = hiltViewModel()
+            )
+        }
+
+        // Pantalla de Detalle (Placeholder por ahora)
+        composable(
+            route = "idea_detail/{ideaId}",
+            arguments = listOf(navArgument("ideaId") { type = NavType.IntType })
+        ) { backStackEntry ->
+            val ideaId = backStackEntry.arguments?.getInt("ideaId") ?: 0
+            // Aquí iría tu IdeaDetailScreen(ideaId)
+        }
     }
 }
