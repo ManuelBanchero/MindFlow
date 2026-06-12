@@ -34,13 +34,13 @@ class AndroidAudioDataSource @Inject constructor(
     override fun start(outputFile: File) {
         recorder = createRecorder().apply {
             // Fuente: Micrófono
-            setAudioSource(MediaRecorder.AudioSource.MIC)
+            setAudioSource(MediaRecorder.AudioSource.VOICE_RECOGNITION)
             // Formato de salida: MPEG_4 (compatible con .m4a)
             setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
             // Codificador: AAC (Buena compresión y calidad)
             setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
             // 16kHz: Ideal para Speech-to-Text
-            setAudioSamplingRate(16000)
+            setAudioSamplingRate(44100)
             // Bitrate razonable para voz
             setAudioEncodingBitRate(128000)
             // Mono (No hace falta estéreo para voz)
