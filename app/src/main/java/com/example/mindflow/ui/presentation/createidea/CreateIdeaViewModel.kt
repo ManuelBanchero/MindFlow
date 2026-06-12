@@ -2,6 +2,8 @@ package com.example.mindflow.ui.presentation.createidea
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.mindflow.domain.service.AudioRecorder
+import com.example.mindflow.domain.service.RecordingState
 import com.example.mindflow.domain.usecase.CreateIdeaUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,69 +13,83 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class CreateIdeaUiState(
-    val isRecording: Boolean = false,
-    val isPaused: Boolean = false,
+    val recordingState: RecordingState = RecordingState.Idle,
     val isProcessing: Boolean = false,
     val error: String? = null,
     val createdIdeaId: Int? = null
 )
 
 sealed interface CreateIdeaEvent {
-    data class OnToggleRecord(val audioUri: String? = null): CreateIdeaEvent
-    data object OnTogglePause: CreateIdeaEvent
-    data object OnCancelIdea: CreateIdeaEvent
+    data object OnToggleRecord : CreateIdeaEvent
+    data object OnTogglePause : CreateIdeaEvent
+    data object OnCancelIdea : CreateIdeaEvent
 }
 
 @HiltViewModel
 class CreateIdeaViewModel @Inject constructor(
-    private val createIdeaUseCase: CreateIdeaUseCase
-): ViewModel() {
-    // Private state
+    private val createIdeaUseCase: CreateIdeaUseCase,
+    private val audioRecorder: AudioRecorder // Inyectamos nuestro nuevo servicio
+) : ViewModel() {
+
     private val _uiState = MutableStateFlow(CreateIdeaUiState())
-    // Public state
     val uiState: StateFlow<CreateIdeaUiState> = _uiState.asStateFlow()
 
-    // Public methods to interact w/view
-    fun onEvent(event: CreateIdeaEvent) {
-        when (event) {
-            is CreateIdeaEvent.OnToggleRecord -> {
-                if (_uiState.value.isRecording) {
-                    // If it was recording and clicked the button again -> process idea
-                    val audioUri = event.audioUri
-                    createIdea(audioUri)
-                } else {
-                    _uiState.value = _uiState.value.copy(
-                        isRecording = true
-                    )
-                }
-            }
-            is CreateIdeaEvent.OnTogglePause -> {
-                _uiState.value = _uiState.value.copy(
-                    isPaused = !_uiState.value.isPaused
-                )
-            }
-            is CreateIdeaEvent.OnCancelIdea -> {
-                _uiState.value = _uiState.value.copy(
-                    isRecording = false
-                )
-                cancelIdea()
+    init {
+        // Observamos el estado del grabador y lo vinculamos a nuestra UI
+        viewModelScope.launch {
+            audioRecorder.recordingState.collect { state ->
+                _uiState.value = _uiState.value.copy(recordingState = state)
             }
         }
     }
 
-    private fun createIdea(audioUri: String?) {
-        if (audioUri == null) {
-            _uiState.value = _uiState.value.copy(
-                isRecording = false,
-                error = "No se pudo obtener el audio de la grabación"
-            )
-
-            return
+    fun onEvent(event: CreateIdeaEvent) {
+        when (event) {
+            is CreateIdeaEvent.OnToggleRecord -> handleToggleRecord()
+            is CreateIdeaEvent.OnTogglePause -> handleTogglePause()
+            is CreateIdeaEvent.OnCancelIdea -> handleCancelIdea()
         }
+    }
 
+    private fun handleToggleRecord() {
+        viewModelScope.launch {
+            val currentState = _uiState.value.recordingState
+
+            if (currentState is RecordingState.Idle || currentState is RecordingState.Error) {
+                // Empezar a grabar
+                audioRecorder.startRecord()
+            } else {
+                // Detener grabación y procesar el audio
+                audioRecorder.stopRecord().onSuccess { path ->
+                    createIdea(path)
+                }.onFailure {
+                    _uiState.value = _uiState.value.copy(error = "Error al detener la grabación")
+                }
+            }
+        }
+    }
+
+    private fun handleTogglePause() {
+        viewModelScope.launch {
+            val currentState = _uiState.value.recordingState
+            if (currentState is RecordingState.Recording) {
+                audioRecorder.pauseRecord()
+            } else if (currentState is RecordingState.Paused) {
+                audioRecorder.resumeRecord()
+            }
+        }
+    }
+
+    private fun handleCancelIdea() {
+        viewModelScope.launch {
+            audioRecorder.stopRecord() // Detenemos sin procesar el resultado
+            _uiState.value = CreateIdeaUiState() // Reseteamos la UI
+        }
+    }
+
+    private fun createIdea(audioUri: String) {
         viewModelScope.launch {
             _uiState.value = _uiState.value.copy(
-                isRecording = false,
                 isProcessing = true,
                 error = null
             )
@@ -81,6 +97,7 @@ class CreateIdeaViewModel @Inject constructor(
             val result = createIdeaUseCase(audioUri)
             result.onSuccess { id ->
                 _uiState.value = _uiState.value.copy(
+                    isProcessing = false,
                     createdIdeaId = id
                 )
             }.onFailure { exception ->
@@ -91,6 +108,4 @@ class CreateIdeaViewModel @Inject constructor(
             }
         }
     }
-
-    private fun cancelIdea() {}
 }
