@@ -8,5 +8,7 @@ data class ProcessedAnswerQuestionDTO(
     @SerialName("summarize_content")
     val summarizeContent: String,
     @SerialName("structured_idea")
-    val structuredIdea: String
+    val structuredIdea: String,
+    @SerialName("transcription")
+    val transcription: String
 )
