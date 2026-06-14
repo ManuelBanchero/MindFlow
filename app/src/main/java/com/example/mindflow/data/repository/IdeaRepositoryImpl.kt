@@ -10,7 +10,6 @@ import com.example.mindflow.data.mapper.toDto
 import com.example.mindflow.data.mapper.toEntity
 import com.example.mindflow.data.remote.datasource.IdeaProcessorDataSource
 import com.example.mindflow.data.remote.datasource.IdeaRemoteDataSource
-import com.example.mindflow.data.local.hardware.SpeechToTextDataSource
 import com.example.mindflow.data.remote.dto.IdeaDTO
 import com.example.mindflow.domain.model.Idea
 import com.example.mindflow.data.remote.dto.ProcessedIdeaDraftDTO
@@ -26,20 +25,18 @@ class IdeaRepositoryImpl @Inject constructor(
    private val database: AppDatabase,
    private val ideaDao: IdeaDAO,
    private val ideaRemoteDataSource: IdeaRemoteDataSource,
-   private val speechToTextDataSource: SpeechToTextDataSource,
    private val ideaProcessorDataSource: IdeaProcessorDataSource
 ): IdeaRepository {
     override suspend fun processIdea(audioUri: String): Result<ProcessedIdeaResult> {
         return try {
             // Transform uri string to Uri
             val uri: Uri = audioUri.toUri()
-            val audioContent: String = speechToTextDataSource.transcribeAudio(uri)
-            val processedIdeaDto = ideaProcessorDataSource.processRawText(audioContent)
+            val processedIdeaDto = ideaProcessorDataSource.processAudio(uri)
 
             Result.success(
                 ProcessedIdeaResult(
                     draft = processedIdeaDto.toDomain(),
-                    audioTranscribed = audioContent
+                    audioTranscribed = processedIdeaDto.transcription
                 )
             )
         } catch (e: Exception) {
@@ -108,20 +105,18 @@ class IdeaRepositoryImpl @Inject constructor(
         return try {
             // Transform uri string to uri
             val uri: Uri = audioUri.toUri()
-            // Get new context
-            val newIdeaContext = speechToTextDataSource.transcribeAudio(uri)
             // Expand idea
             val extendedIdea: ProcessedIdeaDraftDTO = ideaProcessorDataSource.expandIdeaWithNewContext(
                 idea.title,
                 idea.structuredIdea,
-                newIdeaContext
+               uri
             )
             // Create updated idea
             val updatedIdea = idea.copy(
                 title = extendedIdea.title,
                 updatedAt = Instant.now(),
                 category = extendedIdea.category,
-                textsAudiosHistory = idea.textsAudiosHistory + newIdeaContext,
+                textsAudiosHistory = idea.textsAudiosHistory + extendedIdea.transcription,
                 summarizeContent = extendedIdea.summarizeContent,
                 structuredIdea = extendedIdea.structuredIdea,
                 questions = idea.questions + extendedIdea.questions.map { it.toDomain()}
@@ -149,7 +144,6 @@ class IdeaRepositoryImpl @Inject constructor(
             // Transform uri string to uri
             val uri: Uri = audioUri.toUri()
 
-            val userAnswer = speechToTextDataSource.transcribeAudio(uri)
             val question: QuestionEntity = ideaDao.getQuestionById(questionId)
                 ?: throw IllegalArgumentException("No se encontró la pregunta con ID $questionId")
 
@@ -158,13 +152,14 @@ class IdeaRepositoryImpl @Inject constructor(
                 idea.structuredIdea,
                 question.questionText,
                 question.description,
-                userAnswer
+                uri
             )
 
             // Create an updated idea
             val updatedIdea: Idea = idea.copy(
                 summarizeContent = processedIdeaAfterAnswer.summarizeContent,
-                structuredIdea = processedIdeaAfterAnswer.structuredIdea
+                structuredIdea = processedIdeaAfterAnswer.structuredIdea,
+                textsAudiosHistory = idea.textsAudiosHistory + processedIdeaAfterAnswer.transcription
             )
 
             // Update remotely
