@@ -74,4 +74,7 @@ dependencies {
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
+
+    // Gemini
+    implementation(libs.google.generativeai)
 }
