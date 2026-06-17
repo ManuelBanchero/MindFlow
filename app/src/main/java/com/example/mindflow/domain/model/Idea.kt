@@ -11,6 +11,6 @@ data class Idea (
     val category: String,
     val textsAudiosHistory: List<String>,
     val summarizeContent: String,
-    val structuredIdea: String,
+    val structuredIdea: List<StructuredSection>,
     val questions: List<Question>
 )
