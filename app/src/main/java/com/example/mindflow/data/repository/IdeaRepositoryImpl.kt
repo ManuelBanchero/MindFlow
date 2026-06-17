@@ -101,7 +101,7 @@ class IdeaRepositoryImpl @Inject constructor(
             
             val extendedIdeaDto = ideaProcessorDataSource.expandIdeaWithNewContext(
                 idea.title,
-                idea.structuredIdea,
+                idea.structuredIdea.map { it.toDto() },
                 uri
             )
 
@@ -123,7 +123,7 @@ class IdeaRepositoryImpl @Inject constructor(
                 category = extendedIdeaDto.category,
                 textsAudiosHistory = idea.textsAudiosHistory + extendedIdeaDto.transcription,
                 summarizeContent = extendedIdeaDto.summarizeContent,
-                structuredIdea = extendedIdeaDto.structuredIdea,
+                structuredIdea = extendedIdeaDto.structuredIdea.map { it.toDomain() },
                 questions = idea.questions + newQuestions
             )
 
@@ -152,7 +152,7 @@ class IdeaRepositoryImpl @Inject constructor(
 
             val processedAnswerDto = ideaProcessorDataSource.expandIdeaWithAnswerQuestion(
                 idea.title,
-                idea.structuredIdea,
+                idea.structuredIdea.map { it.toDto() },
                 questionEntity.questionText,
                 questionEntity.description,
                 uri
@@ -161,7 +161,7 @@ class IdeaRepositoryImpl @Inject constructor(
             // Creamos la idea actualizada eliminando la pregunta respondida de la lista
             val updatedIdea = idea.copy(
                 summarizeContent = processedAnswerDto.summarizeContent,
-                structuredIdea = processedAnswerDto.structuredIdea,
+                structuredIdea = processedAnswerDto.structuredIdea.map { it.toDomain() },
                 textsAudiosHistory = idea.textsAudiosHistory + processedAnswerDto.transcription,
                 questions = idea.questions.filter { it.id != questionId }
             )
