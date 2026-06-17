@@ -4,7 +4,7 @@ data class ProcessedIdeaDraft(
     val title: String,
     val category: String,
     val summarizeContent: String,
-    val structuredIdea: String,
+    val structuredIdea: List<StructuredSection>,
     val questions: List<QuestionDraft>,
     val transcription: String
 )
