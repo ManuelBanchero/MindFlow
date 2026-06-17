@@ -12,7 +12,7 @@ data class ProcessedIdeaDraftDTO(
     @SerialName("summarize_content")
     val summarizeContent: String,
     @SerialName("structured_idea")
-    val structuredIdea: String,
+    val structuredIdea: List<StructuredSectionDTO>,
     @SerialName("questions")
     val questions: List<ProcessedQuestionDraftDTO>,
     @SerialName("transcription")
