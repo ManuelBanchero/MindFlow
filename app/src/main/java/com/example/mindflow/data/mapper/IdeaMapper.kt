@@ -10,6 +10,7 @@ import com.example.mindflow.data.remote.dto.QuestionDTO
 import com.example.mindflow.domain.model.Idea
 import com.example.mindflow.domain.model.ProcessedIdeaDraft
 import com.example.mindflow.domain.model.Question
+import com.example.mindflow.domain.model.QuestionDraft
 import java.time.Instant
 
 // --- Entity -> Domain ---
@@ -124,10 +125,8 @@ fun Idea.toDto(): IdeaDTO {
 
 // --- Drafts mappings ---
 
-fun ProcessedQuestionDraftDTO.toDomain(): Question {
-    return Question(
-        id = 0,
-        ideaId = 0,
+fun ProcessedQuestionDraftDTO.toDomain(): QuestionDraft {
+    return QuestionDraft(
         category = this.category,
         questionText = this.questionText,
         description = this.description
@@ -140,11 +139,12 @@ fun ProcessedIdeaDraftDTO.toDomain(): ProcessedIdeaDraft {
         category = this.category,
         summarizeContent = this.summarizeContent,
         structuredIdea = this.structuredIdea,
-        questions = this.questions.map { it.toDomain() }
+        questions = this.questions.map { it.toDomain() },
+        transcription = this.transcription
     )
 }
 
-fun Question.toDraftDto(): ProcessedQuestionDraftDTO {
+fun QuestionDraft.toDraftDto(): ProcessedQuestionDraftDTO {
     return ProcessedQuestionDraftDTO(
         category = this.category,
         questionText = this.questionText,
@@ -158,6 +158,7 @@ fun ProcessedIdeaDraft.toDto(): ProcessedIdeaDraftDTO {
         category = this.category,
         summarizeContent = this.summarizeContent,
         structuredIdea = this.structuredIdea,
-        questions = this.questions.map { it.toDraftDto() }
+        questions = this.questions.map { it.toDraftDto() },
+        transcription = this.transcription
     )
 }
