@@ -2,6 +2,7 @@ package com.example.mindflow.data.local.room.database
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
 import com.example.mindflow.data.local.entity.IdeaEntity
 import com.example.mindflow.data.local.entity.QuestionEntity
 import com.example.mindflow.data.local.entity.UserEntity
@@ -14,6 +15,7 @@ import com.example.mindflow.data.local.room.dao.UserDAO
     UserEntity::class],
     version = 1,
     exportSchema = false)
+@TypeConverters(RoomConverters::class)
 abstract class AppDatabase: RoomDatabase() {
     abstract fun ideaDao(): IdeaDAO
     abstract fun userDao(): UserDAO
