@@ -5,9 +5,9 @@ import kotlinx.serialization.Serializable
 
 @Serializable
 data class ProcessedAnswerQuestionDTO(
-    @SerialName("summarize_content")
+    @SerialName("summarizeContent")
     val summarizeContent: String,
-    @SerialName("structured_idea")
+    @SerialName("structuredIdea")
     val structuredIdea: List<StructuredSectionDTO>,
     @SerialName("transcription")
     val transcription: String
