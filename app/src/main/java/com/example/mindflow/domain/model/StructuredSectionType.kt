@@ -24,5 +24,7 @@ enum class StructuredSectionType {
     MONETIZATION,
     NEXT_STEPS,
     CONCLUSION,
+    TOOLS_AND_TECHNOLOGIES,
+    CHALLENGES,
     OTHER
 }
