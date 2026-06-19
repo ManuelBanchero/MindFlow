@@ -6,6 +6,7 @@ import com.example.mindflow.data.remote.dto.ProcessedAnswerQuestionDTO
 import com.example.mindflow.data.remote.dto.ProcessedIdeaDraftDTO
 import com.example.mindflow.data.remote.dto.ProcessedQuestionDraftDTO
 import com.example.mindflow.data.remote.dto.StructuredSectionDTO
+import com.example.mindflow.domain.model.StructuredSectionType
 import kotlinx.coroutines.delay
 import javax.inject.Inject
 
@@ -20,12 +21,12 @@ class MockIdeaProcessorDataSourceImpl @Inject constructor() : IdeaProcessorDataS
             summarizeContent = "Una aplicación Android diseñada para capturar pensamientos desordenados o audios en crudo y estructurarlos automáticamente mediante Inteligencia Artificial.",
             structuredIdea = listOf(
                 StructuredSectionDTO(
-                    type = "pilares",
+                    type = StructuredSectionType.MAIN_IDEA,
                     title = "Pilares del Proyecto",
                     content = "1. **Captura Fricción-Cero:** Permite al usuario grabar audios o escribir textos masivos sin preocuparse por el formato.\n2. **Procesamiento con IA:** Uso de modelos de lenguaje para extraer títulos, resúmenes, categorías y formatear el núcleo de la idea.\n3. **Enfoque Pedagógico:** Generación automática de preguntas clave para forzar al usuario a iterar."
                 ),
                 StructuredSectionDTO(
-                    type = "arquitectura",
+                    type = StructuredSectionType.IMPLEMENTATION,
                     title = "Arquitectura Técnica",
                     content = "* **Capa de Dominio:** Contiene los modelos puros y las reglas de negocio.\n* **Capa de Data:** Room para persistencia local y Retrofit para red.\n* **Capa de UI:** Implementada con Jetpack Compose."
                 )
@@ -58,14 +59,14 @@ class MockIdeaProcessorDataSourceImpl @Inject constructor() : IdeaProcessorDataS
             title = ideaTitle,
             category = "Desarrollo Mobile / Android",
             summarizeContent = "Ampliación de la idea original con nuevo contexto sobre procesamiento local y Whisper.",
-            structuredIdea = listOf(
+            structuredIdea = ideaContent + listOf(
                 StructuredSectionDTO(
-                    type = "alcance",
+                    type = StructuredSectionType.OBJECTIVE,
                     title = "Extensión del Alcance",
                     content = "* **Ciclos de Iteración:** El usuario puede responder preguntas de la IA.\n* **Speech-to-Text Local:** Integrar Whisper.tflite para optimización SoC."
                 ),
                 StructuredSectionDTO(
-                    type = "proximos pasos",
+                    type = StructuredSectionType.NEXT_STEPS,
                     title = "Nuevos pensamientos",
                     content = "Se propone integrar un modelo Whisper optimizado que corra directamente en el hardware del teléfono."
                 )
@@ -93,14 +94,14 @@ class MockIdeaProcessorDataSourceImpl @Inject constructor() : IdeaProcessorDataS
 
         return ProcessedAnswerQuestionDTO(
             summarizeContent = "Consolidación tras responder a la pregunta sobre sincronización y tolerancia a fallos.",
-            structuredIdea = listOf(
+            structuredIdea = ideaContent + listOf(
                 StructuredSectionDTO(
-                    type = "estrategia",
+                    type = StructuredSectionType.PROCESS,
                     title = "Estrategia de Sincronización",
                     content = "Se incorpora un sistema de reintentos y almacenamiento temporal en Room bajo el estado 'PENDING_STRUCTURE'. Esto garantiza que el usuario nunca pierda información."
                 ),
                 StructuredSectionDTO(
-                    type = "beneficio",
+                    type = StructuredSectionType.BENEFITS,
                     title = "Evolución tras respuesta",
                     content = "La conversión de voz a texto se desacopla de la estructuración semántica."
                 )
