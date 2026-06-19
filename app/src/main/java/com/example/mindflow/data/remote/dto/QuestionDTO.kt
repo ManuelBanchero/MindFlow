@@ -7,12 +7,12 @@ import kotlinx.serialization.Serializable
 data class QuestionDTO (
     @SerialName("id")
     val id: Int,
-    @SerialName("idea_id")
+    @SerialName("ideaId")
     val ideaId: Int,
     @SerialName("category")
     val category: String,
-    @SerialName("question_text")
+    @SerialName("questionText")
     val questionText: String,
     @SerialName("description")
     val description: String
-    )
+)

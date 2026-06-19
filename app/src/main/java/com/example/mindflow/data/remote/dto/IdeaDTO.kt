@@ -7,22 +7,22 @@ import kotlinx.serialization.Serializable
 data class IdeaDTO(
     @SerialName("id")
     val id: Int,
-    @SerialName("user_id")
+    @SerialName("userId")
     val userId: Int,
     @SerialName("title")
     val title: String,
-    @SerialName("created_at")
+    @SerialName("createdAt")
     val createdAt: Long,
-    @SerialName("updated_at")
+    @SerialName("updatedAt")
     val updatedAt: Long,
     @SerialName("category")
     val category: String,
-    @SerialName("texts_audio_history")
+    @SerialName("textsAudioHistory")
     val textsAudioHistory: List<String>,
-    @SerialName("summarize_content")
+    @SerialName("summarizeContent")
     val summarizeContent: String,
-    @SerialName("structured_idea")
-    val structuredIdea: String,
+    @SerialName("structuredIdea")
+    val structuredIdea: List<StructuredSectionDTO>,
     @SerialName("questions")
     val questions: List<QuestionDTO>
-    )
+)

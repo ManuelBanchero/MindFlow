@@ -7,7 +7,7 @@ import kotlinx.serialization.Serializable
 data class ProcessedQuestionDraftDTO(
     @SerialName("category")
     val category: String,
-    @SerialName("question_text")
+    @SerialName("questionText")
     val questionText: String,
     @SerialName("description")
     val description: String

@@ -65,13 +65,20 @@ dependencies {
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
 
-    // Retrofit
+    implementation(libs.kotlinx.serialization.json)
+
+    // Retrofit & OkHttp
     implementation(libs.retrofit)
-    implementation(libs.retrofit.converter.kotlinx.serialization)
+    implementation(libs.retrofit.kotlinx.serialization)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging)
     implementation(libs.kotlinx.serialization.json)
 
     // Hilt (Usando KSP)
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
+
+    // Gemini
+    implementation(libs.google.generativeai)
 }

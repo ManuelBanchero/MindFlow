@@ -7,9 +7,12 @@ import com.example.mindflow.data.remote.dto.IdeaDTO
 import com.example.mindflow.data.remote.dto.ProcessedIdeaDraftDTO
 import com.example.mindflow.data.remote.dto.ProcessedQuestionDraftDTO
 import com.example.mindflow.data.remote.dto.QuestionDTO
+import com.example.mindflow.data.remote.dto.StructuredSectionDTO
 import com.example.mindflow.domain.model.Idea
 import com.example.mindflow.domain.model.ProcessedIdeaDraft
 import com.example.mindflow.domain.model.Question
+import com.example.mindflow.domain.model.QuestionDraft
+import com.example.mindflow.domain.model.StructuredSection
 import java.time.Instant
 
 // --- Entity -> Domain ---
@@ -29,13 +32,12 @@ fun IdeaWithQuestionsRelation.toDomain(): Idea {
         id = this.idea.id,
         userId = this.idea.userId,
         title = this.idea.title,
-        // De Long (DB) a Instant (Dominio)
         createdAt = Instant.ofEpochMilli(this.idea.createdAt),
         updatedAt = Instant.ofEpochMilli(this.idea.updatedAt),
         category = this.idea.category,
-        textsAudiosHistory = this.idea.textsAudioHistory.split("\n\n"),
+        textsAudiosHistory = this.idea.textsAudioHistory,
         summarizeContent = this.idea.summarizeContent,
-        structuredIdea = this.idea.structuredIdea,
+        structuredIdea = this.idea.structuredIdea.map { it.toDomain() },
         questions = this.questions.map { it.toDomain() }
     )
 }
@@ -47,13 +49,12 @@ fun Idea.toEntity(): IdeaEntity {
         id = this.id,
         userId = this.userId,
         title = this.title,
-        // De Instant (Dominio) a Long (DB)
         createdAt = this.createdAt.toEpochMilli(),
         updatedAt = this.updatedAt.toEpochMilli(),
         category = this.category,
-        textsAudioHistory = this.textsAudiosHistory.joinToString("\n\n"),
+        textsAudioHistory = this.textsAudiosHistory,
         summarizeContent = this.summarizeContent,
-        structuredIdea = this.structuredIdea
+        structuredIdea = this.structuredIdea.map { it.toDto() }
     )
 }
 
@@ -74,11 +75,10 @@ fun IdeaDTO.toEntity(): IdeaEntity {
         id = this.id,
         userId = this.userId,
         title = this.title,
-        // Ambos son Long, paso directo
         createdAt = this.createdAt,
         updatedAt = this.updatedAt,
         category = this.category,
-        textsAudioHistory = this.textsAudioHistory.joinToString("\n\n"),
+        textsAudioHistory = this.textsAudioHistory,
         summarizeContent = this.summarizeContent,
         structuredIdea = this.structuredIdea
     )
@@ -111,23 +111,38 @@ fun Idea.toDto(): IdeaDTO {
         id = this.id,
         userId = this.userId,
         title = this.title,
-        // Convertimos Instant a Long para el DTO
         createdAt = this.createdAt.toEpochMilli(),
         updatedAt = this.updatedAt.toEpochMilli(),
         category = this.category,
         textsAudioHistory = this.textsAudiosHistory,
         summarizeContent = this.summarizeContent,
-        structuredIdea = this.structuredIdea,
+        structuredIdea = this.structuredIdea.map { it.toDto() },
         questions = this.questions.map { it.toDto() }
+    )
+}
+
+// --- Section Mappings ---
+
+fun StructuredSectionDTO.toDomain(): StructuredSection {
+    return StructuredSection(
+        type = this.type,
+        title = this.title,
+        content = this.content
+    )
+}
+
+fun StructuredSection.toDto(): StructuredSectionDTO {
+    return StructuredSectionDTO(
+        type = this.type,
+        title = this.title,
+        content = this.content
     )
 }
 
 // --- Drafts mappings ---
 
-fun ProcessedQuestionDraftDTO.toDomain(): Question {
-    return Question(
-        id = 0,
-        ideaId = 0,
+fun ProcessedQuestionDraftDTO.toDomain(): QuestionDraft {
+    return QuestionDraft(
         category = this.category,
         questionText = this.questionText,
         description = this.description
@@ -139,12 +154,13 @@ fun ProcessedIdeaDraftDTO.toDomain(): ProcessedIdeaDraft {
         title = this.title,
         category = this.category,
         summarizeContent = this.summarizeContent,
-        structuredIdea = this.structuredIdea,
-        questions = this.questions.map { it.toDomain() }
+        structuredIdea = this.structuredIdea.map { it.toDomain() },
+        questions = this.questions.map { it.toDomain() },
+        transcription = this.transcription
     )
 }
 
-fun Question.toDraftDto(): ProcessedQuestionDraftDTO {
+fun QuestionDraft.toDraftDto(): ProcessedQuestionDraftDTO {
     return ProcessedQuestionDraftDTO(
         category = this.category,
         questionText = this.questionText,
@@ -157,7 +173,8 @@ fun ProcessedIdeaDraft.toDto(): ProcessedIdeaDraftDTO {
         title = this.title,
         category = this.category,
         summarizeContent = this.summarizeContent,
-        structuredIdea = this.structuredIdea,
-        questions = this.questions.map { it.toDraftDto() }
+        structuredIdea = this.structuredIdea.map { it.toDto() },
+        questions = this.questions.map { it.toDraftDto() },
+        transcription = this.transcription
     )
 }
