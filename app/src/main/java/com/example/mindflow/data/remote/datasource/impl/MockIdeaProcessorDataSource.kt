@@ -22,7 +22,7 @@ class MockIdeaProcessorDataSourceImpl @Inject constructor() : IdeaProcessorDataS
             id = 1,
             userId = 1,
             title = "MindFlow: Captura Inteligente de Ideas con Arquitectura Limpia",
-            category = "Desarrollo Mobile / Android",
+            categories = listOf("Desarrollo Mobile", "Android"),
             summarizeContent = "Una aplicación Android diseñada para capturar pensamientos desordenados o audios en crudo y estructurarlos automáticamente mediante Inteligencia Artificial.",
             structuredIdea = listOf(
                 StructuredSectionDTO(
