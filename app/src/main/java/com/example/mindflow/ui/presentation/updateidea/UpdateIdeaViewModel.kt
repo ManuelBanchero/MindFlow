@@ -124,7 +124,7 @@ class UpdateIdeaViewModel @Inject constructor(
                             isLoading = false,
                             error = null,
                             title = idea.title,
-                            categories = parseCategories(idea.category),
+                            categories = idea.categories,
                             categoryInput = "",
                             summary = idea.summarizeContent,
                             sections = if (idea.structuredIdea.isNotEmpty()) {
@@ -242,7 +242,9 @@ class UpdateIdeaViewModel @Inject constructor(
 
         val updatedIdea = idea.copy(
             title = current.title.trim(),
-            category = current.categories.joinToString(" / "),
+            categories = current.categories
+                .map { it.trim() }
+                .filter { it.isNotBlank() },
             summarizeContent = current.summary.trim(),
             structuredIdea = current.sections.map { section ->
                 StructuredSection(
@@ -310,13 +312,6 @@ class UpdateIdeaViewModel @Inject constructor(
             return "Esa categoría ya fue agregada."
         }
         return null
-    }
-
-    private fun parseCategories(raw: String): List<String> {
-        return raw.split("/", ",", ";", "|")
-            .map { it.trim() }
-            .filter { it.isNotBlank() }
-            .distinctBy { it.lowercase() }
     }
 
     private fun StructuredSection.toEditableSection(): UpdateIdeaSectionUiState {
