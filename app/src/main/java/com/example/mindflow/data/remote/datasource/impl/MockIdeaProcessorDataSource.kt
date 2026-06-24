@@ -15,7 +15,7 @@ import javax.inject.Inject
 
 class MockIdeaProcessorDataSourceImpl @Inject constructor() : IdeaProcessorDataSource {
 
-    override suspend fun processAudio(audioUri: Uri): IdeaDTO {
+    override suspend fun processIdea(audioUri: Uri): IdeaDTO {
         // Simulating an API response
         delay(2000)
         return IdeaDTO(
