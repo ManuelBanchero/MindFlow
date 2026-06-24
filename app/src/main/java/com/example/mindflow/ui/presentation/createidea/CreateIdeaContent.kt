@@ -4,12 +4,6 @@ import android.Manifest
 import android.content.pm.PackageManager
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
@@ -44,10 +38,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.scale
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
@@ -58,15 +50,15 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
-import com.airbnb.lottie.compose.LottieAnimation
-import com.airbnb.lottie.compose.LottieCompositionSpec
-import com.airbnb.lottie.compose.LottieConstants
-import com.airbnb.lottie.compose.animateLottieCompositionAsState
-import com.airbnb.lottie.compose.rememberLottieComposition
-import com.example.mindflow.R
+import com.dotlottie.dlplayer.Mode
+import com.lottiefiles.dotlottie.core.compose.ui.DotLottieAnimation
+import com.lottiefiles.dotlottie.core.util.DotLottieSource
 import com.example.mindflow.domain.service.RecordingState
 import com.example.mindflow.ui.components.MindFlowBackground
 import com.example.mindflow.ui.theme.mindFlowColors
+
+private const val WAVE_LOTTIE_ASSET = "animations/animation_water.json"
+//private const val WAVE_LOTTIE_ASSET = "animations/wave_animation_2.json"
 
 @Composable
 fun CreateIdeaContent(
@@ -331,102 +323,21 @@ private fun VoiceOrb(
     isPaused: Boolean,
     isProcessing: Boolean
 ) {
-    val isDark = isSystemInDarkTheme()
-    val composition by rememberLottieComposition(LottieCompositionSpec.RawRes(R.raw.wave))
-    val progress by animateLottieCompositionAsState(
-        composition = composition,
-        isPlaying = isRecording || isProcessing,
-        iterations = LottieConstants.IterateForever
-    )
-    val infiniteTransition = rememberInfiniteTransition(label = "voice-orb")
-    val pulse by infiniteTransition.animateFloat(
-        initialValue = 0.98f,
-        targetValue = 1.04f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1100),
-            repeatMode = RepeatMode.Reverse
-        ),
-        label = "voice-orb-pulse"
-    )
-    val orbScale = if (isRecording || isProcessing) pulse else 1f
+    val animationSpeed = if (isRecording || isProcessing) 2f else 0.5f
 
     Box(
-        modifier = Modifier
-            .size(292.dp)
-            .scale(orbScale),
+        modifier = Modifier.size(284.dp),
         contentAlignment = Alignment.Center
     ) {
-        Surface(
-            modifier = Modifier.size(276.dp),
-            shape = CircleShape,
-            color = Color.Transparent,
-            border = BorderStroke(
-                2.dp,
-                if (isDark) {
-                    MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.82f)
-                } else {
-                    MaterialTheme.colorScheme.primary.copy(alpha = 0.72f)
-                }
-            )
-        ) {}
-
-        Surface(
-            modifier = Modifier.size(260.dp),
-            shape = CircleShape,
-            color = MaterialTheme.colorScheme.primary.copy(alpha = if (isDark) 0.05f else 0.08f),
-            border = BorderStroke(
-                12.dp,
-                MaterialTheme.colorScheme.primaryContainer.copy(alpha = if (isDark) 0.48f else 0.36f)
-            )
-        ) {}
-
-        Surface(
-            modifier = Modifier
-                .size(226.dp)
-                .shadow(22.dp, CircleShape),
-            shape = CircleShape,
-            color = Color.Transparent
-        ) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(
-                        Brush.radialGradient(
-                            colors = if (isDark) {
-                                listOf(
-                                    MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.84f),
-                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.28f),
-                                    MaterialTheme.colorScheme.surfaceContainer.copy(alpha = 0.76f)
-                                )
-                            } else {
-                                listOf(
-                                    MaterialTheme.colorScheme.primaryContainer.copy(alpha = 0.62f),
-                                    MaterialTheme.colorScheme.primary.copy(alpha = 0.18f),
-                                    MaterialTheme.colorScheme.surface.copy(alpha = 0.32f)
-                                )
-                            }
-                        )
-                    ),
-                contentAlignment = Alignment.Center
-            ) {
-                LottieAnimation(
-                    composition = composition,
-                    progress = { progress },
-                    modifier = Modifier
-                        .fillMaxSize()
-                        .padding(22.dp)
-                )
-
-                if (isPaused) {
-                    Icon(
-                        imageVector = Icons.Default.Pause,
-                        contentDescription = null,
-                        modifier = Modifier.size(56.dp),
-                        tint = MaterialTheme.colorScheme.primary
-                    )
-                }
-            }
-        }
+        DotLottieAnimation(
+            modifier = Modifier.fillMaxSize(),
+            source = DotLottieSource.Asset(WAVE_LOTTIE_ASSET),
+            autoplay = true,
+            loop = true,
+            speed = animationSpeed,
+            useFrameInterpolation = false,
+            playMode = Mode.FORWARD
+        )
     }
 }
 
