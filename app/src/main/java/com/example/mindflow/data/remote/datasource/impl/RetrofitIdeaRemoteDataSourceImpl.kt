@@ -15,8 +15,8 @@ class RetrofitIdeaRemoteDataSourceImpl @Inject constructor(
         TODO("Not yet implemented")
     }
 
-    override suspend fun updateIdea(ideaDTO: IdeaDTO) {
-        TODO("Not yet implemented")
+    override suspend fun updateIdea(ideaDTO: IdeaDTO): IdeaDTO {
+        return apiService.updateIdea(ideaDTO.id, ideaDTO)
     }
 
     override suspend fun deleteIdea(ideaId: Int) {
