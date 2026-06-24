@@ -230,6 +230,12 @@ private fun UpdateIdeaForm(
         Spacer(modifier = Modifier.height(20.dp))
 
         FormFieldLabel(text = "Categorías", color = labelColor)
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            text = "Mínimo 1 y máximo 3 categorías",
+            style = MaterialTheme.typography.bodySmall,
+            color = secondaryTextColor
+        )
         Spacer(modifier = Modifier.height(8.dp))
 
         FlowRow(
@@ -269,7 +275,11 @@ private fun UpdateIdeaForm(
             Surface(
                 modifier = Modifier.size(44.dp),
                 shape = CircleShape,
-                color = MaterialTheme.colorScheme.primary,
+                color = if (uiState.categories.size < 3) {
+                    MaterialTheme.colorScheme.primary
+                } else {
+                    MaterialTheme.colorScheme.primary.copy(alpha = 0.38f)
+                },
                 contentColor = MaterialTheme.colorScheme.onPrimary
             ) {
                 Box(
@@ -280,7 +290,12 @@ private fun UpdateIdeaForm(
                 ) {
                     Icon(
                         imageVector = Icons.Filled.Add,
-                        contentDescription = "Agregar categoría"
+                        contentDescription = "Agregar categoría",
+                        tint = if (uiState.categories.size < 3) {
+                            MaterialTheme.colorScheme.onPrimary
+                        } else {
+                            MaterialTheme.colorScheme.onPrimary.copy(alpha = 0.55f)
+                        }
                     )
                 }
             }
