@@ -210,7 +210,10 @@ private fun DetailScrollableContent(
             .verticalScroll(scrollState)
     ) {
         Text(
-            text = idea.category.ifBlank { "Idea" }.uppercase(),
+            text = idea.categories.takeIf { it.isNotEmpty() }
+                ?.joinToString(" · ")
+                ?.uppercase()
+                ?: "IDEA",
             style = MaterialTheme.typography.labelLarge,
             color = labelColor,
             fontWeight = FontWeight.Bold
