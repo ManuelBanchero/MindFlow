@@ -8,6 +8,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 @Composable
 fun CreateIdeaScreen(
     onCreateIdeaSuccess: (Int) -> Unit,
+    onNavigateToIdeaList: () -> Unit,
     viewModel: CreateIdeaViewModel
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -21,6 +22,7 @@ fun CreateIdeaScreen(
 
     CreateIdeaContent(
         uiState,
-        onEvent = { event -> viewModel.onEvent(event) }
+        onEvent = { event -> viewModel.onEvent(event) },
+        onNavigateToIdeaList = onNavigateToIdeaList
     )
 }
