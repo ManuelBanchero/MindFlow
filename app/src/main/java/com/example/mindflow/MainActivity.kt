@@ -13,6 +13,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import com.example.mindflow.ui.presentation.createidea.CreateIdeaScreen
+import com.example.mindflow.ui.presentation.ideadetail.IdeaDetailScreen
 import com.example.mindflow.ui.presentation.idealist.IdeaListScreen
 import com.example.mindflow.ui.presentation.login.LoginScreen
 import com.example.mindflow.ui.theme.MindFlowTheme
@@ -58,6 +59,11 @@ fun MindFlowAppNavigation() {
                         popUpTo("create_idea") { inclusive = true }
                     }
                 },
+                onNavigateToIdeaList = {
+                    navController.navigate("idea_list") {
+                        launchSingleTop = true
+                    }
+                },
                 viewModel = hiltViewModel()
             )
         }
@@ -68,6 +74,11 @@ fun MindFlowAppNavigation() {
                 onNavigateToIdeaDetail = { ideaId ->
                     navController.navigate("idea_detail/$ideaId")
                 },
+                onNavigateToCreateIdea = {
+                    navController.navigate("create_idea") {
+                        launchSingleTop = true
+                    }
+                },
                 viewModel = hiltViewModel()
             )
         }
@@ -76,9 +87,22 @@ fun MindFlowAppNavigation() {
         composable(
             route = "idea_detail/{ideaId}",
             arguments = listOf(navArgument("ideaId") { type = NavType.IntType })
-        ) { backStackEntry ->
-            val ideaId = backStackEntry.arguments?.getInt("ideaId") ?: 0
-            // Aquí iría tu IdeaDetailScreen(ideaId)
+        ) {
+            IdeaDetailScreen(
+                onBack = {
+                    navController.popBackStack()
+                },
+                onNavigateToEdit = { _ ->
+                    // Pendiente de pantalla de edición.
+                },
+                onNavigateToQuestions = { _ ->
+                    // Pendiente de pantalla de preguntas.
+                },
+                onDeleted = {
+                    navController.popBackStack()
+                },
+                viewModel = hiltViewModel()
+            )
         }
     }
 }
