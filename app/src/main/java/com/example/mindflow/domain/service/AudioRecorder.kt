@@ -19,4 +19,6 @@ interface AudioRecorder {
     suspend fun resumeRecord(): Result<Unit>
 
     suspend fun stopRecord(): Result<String>
+
+    suspend fun cancelRecord(): Result<Unit>
 }

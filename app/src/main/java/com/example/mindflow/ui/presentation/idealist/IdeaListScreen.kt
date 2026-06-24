@@ -8,6 +8,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 @Composable
 fun IdeaListScreen(
     onNavigateToIdeaDetail: (Int) -> Unit,
+    onNavigateToCreateIdea: () -> Unit,
     viewModel: IdeaListViewModel
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -23,6 +24,7 @@ fun IdeaListScreen(
     // Llamada al componente externo
     IdeaListContent(
         uiState = uiState,
+        onNavigateToCreateIdea = onNavigateToCreateIdea,
         onIdeaClick = { id ->
             viewModel.onEvent(IdeaListEvent.OnIdeaClick(id))
         }

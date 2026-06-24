@@ -84,10 +84,13 @@ fun IdeaDTO.toEntity(): IdeaEntity {
     )
 }
 
-fun QuestionDTO.toEntity(): QuestionEntity {
+fun QuestionDTO.toEntity(
+    generatedId: Int = this.id,
+    ideaIdOverride: Int = this.ideaId
+): QuestionEntity {
     return QuestionEntity(
-        id = this.id,
-        ideaId = this.ideaId,
+        id = generatedId,
+        ideaId = ideaIdOverride,
         category = this.category,
         questionText = this.questionText,
         description = this.description,

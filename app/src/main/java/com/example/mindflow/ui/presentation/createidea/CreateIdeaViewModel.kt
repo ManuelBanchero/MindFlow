@@ -82,8 +82,8 @@ class CreateIdeaViewModel @Inject constructor(
 
     private fun handleCancelIdea() {
         viewModelScope.launch {
-            audioRecorder.stopRecord() // Detenemos sin procesar el resultado
-            _uiState.value = CreateIdeaUiState() // Reseteamos la UI
+            audioRecorder.cancelRecord()
+            _uiState.value = CreateIdeaUiState()
         }
     }
 

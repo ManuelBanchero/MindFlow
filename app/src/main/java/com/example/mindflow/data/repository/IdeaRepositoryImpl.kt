@@ -13,7 +13,6 @@ import com.example.mindflow.data.remote.datasource.IdeaRemoteDataSource
 import com.example.mindflow.data.remote.dto.IdeaDTO
 import com.example.mindflow.domain.model.Idea
 import com.example.mindflow.domain.model.Question
-import com.example.mindflow.domain.model.ProcessedIdeaResult
 import com.example.mindflow.domain.repository.IdeaRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -28,40 +27,38 @@ class IdeaRepositoryImpl @Inject constructor(
    private val ideaProcessorDataSource: IdeaProcessorDataSource
 ): IdeaRepository {
 
-    override suspend fun processIdea(audioUri: String): Result<ProcessedIdeaResult> {
+    override suspend fun processIdea(audioUri: String): Result<IdeaDTO> {
         return try {
             val uri: Uri = audioUri.toUri()
-            val processedIdeaDto = ideaProcessorDataSource.processAudio(uri)
+            val ideaDto = ideaProcessorDataSource.processAudio(uri)
+            ideaProcessorDataSource.deleteAudio(uri)
 
-            Result.success(
-                ProcessedIdeaResult(
-                    draft = processedIdeaDto.toDomain(),
-                    audioTranscribed = processedIdeaDto.transcription
-                )
-            )
+            Result.success(ideaDto)
         } catch (e: Exception) {
             Result.failure(e)
         }
     }
 
-    override suspend fun saveIdea(processedIdea: ProcessedIdeaResult, userId: Int): Result<Int> {
+    override suspend fun saveIdea(ideaDTO: IdeaDTO, userId: Int): Result<Int> {
         return try {
-            val (draft, audioTranscribed) = processedIdea
-            
-            val ideaDto: IdeaDTO = ideaRemoteDataSource.saveIdea(
-                draft.toDto(),
-                audioTranscribed,
+            val savedIdeaDto: IdeaDTO = ideaRemoteDataSource.saveIdea(
+                ideaDTO.copy(userId = userId),
                 userId
             )
-            
+
             database.withTransaction {
-                ideaDao.upsertIdea(ideaDto.toEntity())
+                ideaDao.upsertIdea(savedIdeaDto.toEntity())
                 ideaDao.upsertQuestions(
-                    ideaDto.questions.map { it.toEntity() }
+                    savedIdeaDto.questions.mapIndexed { index, questionDto ->
+                        questionDto.toEntity(
+                            generatedId = if (questionDto.id != 0) questionDto.id else index + 1,
+                            ideaIdOverride = savedIdeaDto.id
+                        )
+                    }
                 )
             }
 
-            Result.success(ideaDto.id)
+            Result.success(savedIdeaDto.id)
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -104,6 +101,7 @@ class IdeaRepositoryImpl @Inject constructor(
                 idea.structuredIdea.map { it.toDto() },
                 uri
             )
+            ideaProcessorDataSource.deleteAudio(uri)
 
             // Convertimos los QuestionDraft sugeridos a Questions reales (id=0 para que Room genere el nuevo)
             val newQuestions = extendedIdeaDto.questions.map { dto ->
@@ -157,6 +155,7 @@ class IdeaRepositoryImpl @Inject constructor(
                 questionEntity.description,
                 uri
             )
+            ideaProcessorDataSource.deleteAudio(uri)
 
             // Creamos la idea actualizada eliminando la pregunta respondida de la lista
             val updatedIdea = idea.copy(
