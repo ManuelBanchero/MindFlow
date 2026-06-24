@@ -8,5 +8,5 @@ interface IdeaRemoteDataSource {
         userId: Int
     ): IdeaDTO
     suspend fun updateIdea(ideaDTO: IdeaDTO)
-    suspend fun deleteIdea(userId: Int)
+    suspend fun deleteIdea(ideaId: Int)
 }
