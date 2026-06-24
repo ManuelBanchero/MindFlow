@@ -16,7 +16,7 @@ data class IdeaEntity(
     val createdAt: Long,
     @ColumnInfo(name = "updated_at")
     val updatedAt: Long,
-    val category: String,
+    val categories: List<String>,
     @ColumnInfo(name = "texts_audio_history")
     val textsAudioHistory: List<String>,
     @ColumnInfo(name = "summarize_content")
