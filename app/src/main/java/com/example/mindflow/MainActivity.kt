@@ -16,6 +16,7 @@ import com.example.mindflow.ui.presentation.createidea.CreateIdeaScreen
 import com.example.mindflow.ui.presentation.ideadetail.IdeaDetailScreen
 import com.example.mindflow.ui.presentation.idealist.IdeaListScreen
 import com.example.mindflow.ui.presentation.login.LoginScreen
+import com.example.mindflow.ui.presentation.updateidea.UpdateIdeaScreen
 import com.example.mindflow.ui.theme.MindFlowTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -92,13 +93,28 @@ fun MindFlowAppNavigation() {
                 onBack = {
                     navController.popBackStack()
                 },
-                onNavigateToEdit = { _ ->
-                    // Pendiente de pantalla de edición.
+                onNavigateToEdit = { ideaId ->
+                    navController.navigate("update_idea/$ideaId")
                 },
                 onNavigateToQuestions = { _ ->
                     // Pendiente de pantalla de preguntas.
                 },
                 onDeleted = {
+                    navController.popBackStack()
+                },
+                viewModel = hiltViewModel()
+            )
+        }
+
+        composable(
+            route = "update_idea/{ideaId}",
+            arguments = listOf(navArgument("ideaId") { type = NavType.IntType })
+        ) {
+            UpdateIdeaScreen(
+                onBack = {
+                    navController.popBackStack()
+                },
+                onSaveSuccess = {
                     navController.popBackStack()
                 },
                 viewModel = hiltViewModel()

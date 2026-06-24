@@ -2,6 +2,7 @@ package com.example.mindflow.data.remote.extensions
 
 import android.content.Context
 import android.net.Uri
+import android.util.Log
 import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.toRequestBody
@@ -33,6 +34,7 @@ fun Context.audioUriToMultiPart(
     }
 
     val mimeType = contentResolver.getType(uri) ?: "audio/m4a"
+    Log.d("MindFlowAudio", "Preparing multipart audio. uri=$uri bytes=${bytes.size} mimeType=$mimeType")
 
     val requestBody = bytes.toRequestBody(
         mimeType.toMediaType()

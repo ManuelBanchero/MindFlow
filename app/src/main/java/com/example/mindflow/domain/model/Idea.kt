@@ -8,7 +8,7 @@ data class Idea (
     val title: String,
     val createdAt: Instant,
     val updatedAt: Instant,
-    val category: String,
+    val categories: List<String>,
     val textsAudiosHistory: List<String>,
     val summarizeContent: String,
     val structuredIdea: List<StructuredSection>,

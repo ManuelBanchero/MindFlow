@@ -1,22 +1,25 @@
 package com.example.mindflow.data.remote.datasource.impl
 
+import com.example.mindflow.data.remote.api.MindFlowApiService
 import com.example.mindflow.data.remote.datasource.IdeaRemoteDataSource
 import com.example.mindflow.data.remote.dto.IdeaDTO
 import javax.inject.Inject
 
-class MockIdeaRemoteDataSource @Inject constructor(): IdeaRemoteDataSource {
+class RetrofitIdeaRemoteDataSourceImpl @Inject constructor(
+    private val apiService: MindFlowApiService
+): IdeaRemoteDataSource {
     override suspend fun saveIdea(
         ideaDTO: IdeaDTO,
         userId: Int
     ): IdeaDTO {
-        return ideaDTO.copy(userId = userId)
+        TODO("Not yet implemented")
     }
 
     override suspend fun updateIdea(ideaDTO: IdeaDTO): IdeaDTO {
-        return ideaDTO
+        return apiService.updateIdea(ideaDTO.id, ideaDTO)
     }
 
-    override suspend fun deleteIdea(userId: Int) {
-        return
+    override suspend fun deleteIdea(ideaId: Int) {
+        return apiService.deleteIdea(ideaId)
     }
 }

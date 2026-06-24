@@ -7,7 +7,9 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ExperimentalLayoutApi
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
@@ -417,6 +419,7 @@ private fun IdeaListHeader(count: Int) {
     }
 }
 
+@OptIn(ExperimentalLayoutApi::class)
 @Composable
 private fun IdeaCard(
     idea: Idea,
@@ -428,11 +431,10 @@ private fun IdeaCard(
         idea.structuredIdea.firstOrNull()?.content ?: "Sin resumen disponible."
     }
     val tags = buildList {
-        if (idea.category.isNotBlank()) add(idea.category)
-        idea.structuredIdea.take(1).forEach { section ->
-            if (section.title.isNotBlank()) add(section.title)
+        idea.categories.take(3).forEach { category ->
+            if (category.isNotBlank()) add(category)
         }
-    }.take(2)
+    }.take(3)
 
     Surface(
         modifier = Modifier
@@ -507,12 +509,12 @@ private fun IdeaCard(
 
                 if (tags.isNotEmpty()) {
                     Spacer(modifier = Modifier.height(14.dp))
-                    Row(
+                    FlowRow(
                         horizontalArrangement = Arrangement.spacedBy(8.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalArrangement = Arrangement.spacedBy(8.dp)
                     ) {
                         tags.forEach { tag ->
-                            IdeaTag(text = "#${tag.trim().replace(" ", "")}")
+                            IdeaTag(text = tag.trim())
                         }
                     }
                 }

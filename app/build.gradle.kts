@@ -83,5 +83,5 @@ dependencies {
     implementation(libs.google.generativeai)
 
     // Lottie
-    implementation(libs.lottie.compose)
+    implementation(libs.dotlottie.android)
 }

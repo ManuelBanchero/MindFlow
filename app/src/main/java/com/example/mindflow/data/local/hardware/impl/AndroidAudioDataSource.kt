@@ -3,6 +3,7 @@ package com.example.mindflow.data.local.hardware.impl
 import android.content.Context
 import android.media.MediaRecorder
 import android.os.Build
+import android.util.Log
 import com.example.mindflow.data.local.hardware.AudioDataSource
 import dagger.hilt.android.qualifiers.ApplicationContext
 import java.io.File
@@ -16,6 +17,10 @@ import javax.inject.Inject
 class AndroidAudioDataSource @Inject constructor(
     @ApplicationContext private val context: Context
 ) : AudioDataSource {
+
+    private companion object {
+        const val TAG = "MindFlowAudio"
+    }
 
     private var recorder: MediaRecorder? = null
 
@@ -33,16 +38,17 @@ class AndroidAudioDataSource @Inject constructor(
 
     override fun start(outputFile: File) {
         recorder = createRecorder().apply {
-            // Fuente: Micrófono
-            setAudioSource(MediaRecorder.AudioSource.VOICE_RECOGNITION)
+            Log.d(TAG, "Starting recording at ${outputFile.absolutePath}")
+
+            setAudioSource(MediaRecorder.AudioSource.MIC)
             // Formato de salida: MPEG_4 (compatible con .m4a)
             setOutputFormat(MediaRecorder.OutputFormat.MPEG_4)
             // Codificador: AAC (Buena compresión y calidad)
             setAudioEncoder(MediaRecorder.AudioEncoder.AAC)
-            // 16kHz: Ideal para Speech-to-Text
-            setAudioSamplingRate(44100)
+            // 16kHz es suficiente para voz y suele ser más estable para speech-to-text.
+            setAudioSamplingRate(16000)
             // Bitrate razonable para voz
-            setAudioEncodingBitRate(128000)
+            setAudioEncodingBitRate(64000)
             // Mono (No hace falta estéreo para voz)
             setAudioChannels(1)
             // Destino: La ruta absoluta del archivo proporcionado por FileManager
@@ -58,7 +64,7 @@ class AndroidAudioDataSource @Inject constructor(
             try {
                 stop()
             } catch (e: Exception) {
-                // Manejar posible error si se llama stop() demasiado rápido
+                Log.w(TAG, "MediaRecorder stop failed", e)
             }
             reset()
             release()

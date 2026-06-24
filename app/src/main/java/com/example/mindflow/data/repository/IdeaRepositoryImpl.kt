@@ -30,7 +30,11 @@ class IdeaRepositoryImpl @Inject constructor(
     override suspend fun processIdea(audioUri: String): Result<IdeaDTO> {
         return try {
             val uri: Uri = audioUri.toUri()
-            val ideaDto = ideaProcessorDataSource.processAudio(uri)
+
+            // Process audio and create an Idea (also saves the idea in the cloud)
+            val ideaDto = ideaProcessorDataSource.processIdea(uri)
+
+            // Deletes audio from user storage
             ideaProcessorDataSource.deleteAudio(uri)
 
             Result.success(ideaDto)
@@ -41,24 +45,19 @@ class IdeaRepositoryImpl @Inject constructor(
 
     override suspend fun saveIdea(ideaDTO: IdeaDTO, userId: Int): Result<Int> {
         return try {
-            val savedIdeaDto: IdeaDTO = ideaRemoteDataSource.saveIdea(
-                ideaDTO.copy(userId = userId),
-                userId
-            )
-
             database.withTransaction {
-                ideaDao.upsertIdea(savedIdeaDto.toEntity())
+                ideaDao.upsertIdea(ideaDTO.toEntity())
                 ideaDao.upsertQuestions(
-                    savedIdeaDto.questions.mapIndexed { index, questionDto ->
+                    ideaDTO.questions.mapIndexed { index, questionDto ->
                         questionDto.toEntity(
                             generatedId = if (questionDto.id != 0) questionDto.id else index + 1,
-                            ideaIdOverride = savedIdeaDto.id
+                            ideaIdOverride = ideaDTO.id
                         )
                     }
                 )
             }
 
-            Result.success(savedIdeaDto.id)
+            Result.success(ideaDTO.id)
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -118,7 +117,7 @@ class IdeaRepositoryImpl @Inject constructor(
             val updatedIdea = idea.copy(
                 title = extendedIdeaDto.title,
                 updatedAt = Instant.now(),
-                category = extendedIdeaDto.category,
+                categories = parseCategories(extendedIdeaDto.category),
                 textsAudiosHistory = idea.textsAudiosHistory + extendedIdeaDto.transcription,
                 summarizeContent = extendedIdeaDto.summarizeContent,
                 structuredIdea = extendedIdeaDto.structuredIdea.map { it.toDomain() },
@@ -185,5 +184,12 @@ class IdeaRepositoryImpl @Inject constructor(
 
     override fun getIdeaById(ideaId: Int, userId: Int): Flow<Idea?> {
         return ideaDao.getIdeaById(ideaId, userId).map { it?.toDomain() }
+    }
+
+    private fun parseCategories(raw: String): List<String> {
+        return raw.split("/", ",", ";", "|")
+            .map { it.trim() }
+            .filter { it.isNotBlank() }
+            .distinctBy { it.lowercase() }
     }
 }
