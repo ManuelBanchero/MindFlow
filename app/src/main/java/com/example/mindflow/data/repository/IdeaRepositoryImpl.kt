@@ -117,7 +117,7 @@ class IdeaRepositoryImpl @Inject constructor(
             val updatedIdea = idea.copy(
                 title = extendedIdeaDto.title,
                 updatedAt = Instant.now(),
-                category = extendedIdeaDto.category,
+                categories = parseCategories(extendedIdeaDto.category),
                 textsAudiosHistory = idea.textsAudiosHistory + extendedIdeaDto.transcription,
                 summarizeContent = extendedIdeaDto.summarizeContent,
                 structuredIdea = extendedIdeaDto.structuredIdea.map { it.toDomain() },
@@ -184,5 +184,12 @@ class IdeaRepositoryImpl @Inject constructor(
 
     override fun getIdeaById(ideaId: Int, userId: Int): Flow<Idea?> {
         return ideaDao.getIdeaById(ideaId, userId).map { it?.toDomain() }
+    }
+
+    private fun parseCategories(raw: String): List<String> {
+        return raw.split("/", ",", ";", "|")
+            .map { it.trim() }
+            .filter { it.isNotBlank() }
+            .distinctBy { it.lowercase() }
     }
 }
