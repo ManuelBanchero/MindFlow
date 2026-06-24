@@ -15,8 +15,8 @@ data class IdeaDTO(
     val createdAt: Long,
     @SerialName("updatedAt")
     val updatedAt: Long,
-    @SerialName("category")
-    val category: String,
+    @SerialName("categories")
+    val categories: List<String>,
     @SerialName("textsAudioHistory")
     val textsAudioHistory: List<String>,
     @SerialName("summarizeContent")
