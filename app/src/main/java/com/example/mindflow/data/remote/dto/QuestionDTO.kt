@@ -6,9 +6,9 @@ import kotlinx.serialization.Serializable
 @Serializable
 data class QuestionDTO (
     @SerialName("id")
-    val id: Int,
+    val id: Int = 0,
     @SerialName("ideaId")
-    val ideaId: Int,
+    val ideaId: Int = 0,
     @SerialName("category")
     val category: String,
     @SerialName("questionText")
