@@ -17,7 +17,7 @@ class RetrofitIdeaProcessorDataSourceImpl @Inject constructor(
     private val context: Context,
     private val apiService: MindFlowApiService
 ): IdeaProcessorDataSource {
-    override suspend fun processAudio(audioUri: Uri): IdeaDTO {
+    override suspend fun processIdea(audioUri: Uri): IdeaDTO {
         val audioPart = context.audioUriToMultiPart(audioUri)
 
         return apiService.processIdea(audioPart)
