@@ -12,8 +12,8 @@ class MockIdeaRemoteDataSource @Inject constructor(): IdeaRemoteDataSource {
         return ideaDTO.copy(userId = userId)
     }
 
-    override suspend fun updateIdea(ideaDTO: IdeaDTO) {
-        return
+    override suspend fun updateIdea(ideaDTO: IdeaDTO): IdeaDTO {
+        return ideaDTO
     }
 
     override suspend fun deleteIdea(userId: Int) {
