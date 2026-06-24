@@ -9,12 +9,12 @@ plugins {
 
 android {
     namespace = "com.example.mindflow"
-    compileSdk = 35 // Simplificado a la versión estable actual
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.mindflow"
         minSdk = 26
-        targetSdk = 35 // Alineado con compileSdk
+        targetSdk = 35
         versionCode = 1
         versionName = "1.0"
 
@@ -51,6 +51,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.graphics)
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
+    implementation("androidx.compose.material:material-icons-extended")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
@@ -60,7 +61,7 @@ dependencies {
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
 
-    // Room (Usando KSP)
+    // Room
     implementation(libs.androidx.room.runtime)
     implementation(libs.androidx.room.ktx)
     ksp(libs.androidx.room.compiler)
@@ -72,13 +73,15 @@ dependencies {
     implementation(libs.retrofit.kotlinx.serialization)
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging)
-    implementation(libs.kotlinx.serialization.json)
 
-    // Hilt (Usando KSP)
+    // Hilt
     implementation(libs.hilt.android)
     ksp(libs.hilt.compiler)
     implementation(libs.androidx.hilt.navigation.compose)
 
     // Gemini
     implementation(libs.google.generativeai)
+
+    // Lottie
+    implementation(libs.lottie.compose)
 }
