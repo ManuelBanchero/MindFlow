@@ -1,6 +1,6 @@
 package com.example.mindflow.data.remote.api
 
-import com.example.mindflow.data.remote.dto.ProcessedIdeaDraftDTO
+import com.example.mindflow.data.remote.dto.IdeaDTO
 import okhttp3.MultipartBody
 import retrofit2.http.Multipart
 import retrofit2.http.POST
@@ -12,5 +12,5 @@ interface MindFlowApiService {
     @POST("ideas/process")
     suspend fun processIdea(
         @Part audio: MultipartBody.Part
-    ): ProcessedIdeaDraftDTO
+    ): IdeaDTO
 }
