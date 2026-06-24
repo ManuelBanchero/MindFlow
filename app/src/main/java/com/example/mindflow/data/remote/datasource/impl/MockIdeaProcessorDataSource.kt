@@ -2,20 +2,25 @@ package com.example.mindflow.data.remote.datasource.impl
 
 import android.net.Uri
 import com.example.mindflow.data.remote.datasource.IdeaProcessorDataSource
+import com.example.mindflow.data.remote.dto.IdeaDTO
 import com.example.mindflow.data.remote.dto.ProcessedAnswerQuestionDTO
 import com.example.mindflow.data.remote.dto.ProcessedIdeaDraftDTO
 import com.example.mindflow.data.remote.dto.ProcessedQuestionDraftDTO
+import com.example.mindflow.data.remote.dto.QuestionDTO
 import com.example.mindflow.data.remote.dto.StructuredSectionDTO
 import com.example.mindflow.domain.model.StructuredSectionType
 import kotlinx.coroutines.delay
+import java.time.Instant
 import javax.inject.Inject
 
 class MockIdeaProcessorDataSourceImpl @Inject constructor() : IdeaProcessorDataSource {
 
-    override suspend fun processAudio(audioUri: Uri): ProcessedIdeaDraftDTO {
+    override suspend fun processAudio(audioUri: Uri): IdeaDTO {
         // Simulating an API response
         delay(2000)
-        return ProcessedIdeaDraftDTO(
+        return IdeaDTO(
+            id = 1,
+            userId = 1,
             title = "MindFlow: Captura Inteligente de Ideas con Arquitectura Limpia",
             category = "Desarrollo Mobile / Android",
             summarizeContent = "Una aplicación Android diseñada para capturar pensamientos desordenados o audios en crudo y estructurarlos automáticamente mediante Inteligencia Artificial.",
@@ -31,20 +36,32 @@ class MockIdeaProcessorDataSourceImpl @Inject constructor() : IdeaProcessorDataS
                     content = "* **Capa de Dominio:** Contiene los modelos puros y las reglas de negocio.\n* **Capa de Data:** Room para persistencia local y Retrofit para red.\n* **Capa de UI:** Implementada con Jetpack Compose."
                 )
             ),
+            textsAudioHistory = listOf(
+                "Esta es una transcripción de prueba generada por el Mock para el audio de MindFlow sobre arquitectura limpia y procesamiento con IA."
+            ),
+            createdAt = Instant.now().toEpochMilli(),
+            updatedAt = Instant.now().toEpochMilli(),
             questions = listOf(
-                ProcessedQuestionDraftDTO(
+                QuestionDTO(
+                    id = 1,
+                    ideaId = 1,
                     category = "Arquitectura",
                     questionText = "¿Cómo estructurarás el módulo de Hilt?",
                     description = "Pensar en el uso de @Binds o @Provides para desacoplar la interfaz de su implementación."
                 ),
-                ProcessedQuestionDraftDTO(
+                QuestionDTO(
+                    id = 2,
+                    ideaId = 1,
                     category = "Estrategia de Sincronización",
                     questionText = "Si el usuario está offline, ¿cómo encolarás las ideas?",
                     description = "Evaluar el uso de WorkManager de Jetpack."
                 )
-            ),
-            transcription = "Esta es una transcripción de prueba generada por el Mock para el audio de MindFlow sobre arquitectura limpia y procesamiento con IA."
+            )
         )
+    }
+
+    override suspend fun deleteAudio(audioUri: Uri) {
+        // No-op in mock
     }
 
     override suspend fun expandIdeaWithNewContext(
