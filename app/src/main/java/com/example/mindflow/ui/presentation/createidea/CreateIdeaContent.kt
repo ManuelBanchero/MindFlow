@@ -158,7 +158,7 @@ private fun CreateIdeaContentLayout(
                 Spacer(modifier = Modifier.height(36.dp))
 
                 Text(
-                    text = "Hola Manuel,",
+                    text = buildGreeting(uiState.userFirstName),
                     style = MaterialTheme.typography.titleMedium,
                     color = if (isDark) MaterialTheme.colorScheme.onBackground else colors.textLabel,
                     fontWeight = FontWeight.Bold,
@@ -229,6 +229,15 @@ private fun CreateIdeaContentLayout(
                 Spacer(modifier = Modifier.height(18.dp))
             }
         }
+    }
+}
+
+private fun buildGreeting(firstName: String): String {
+    val name = firstName.trim()
+    return if (name.isNotEmpty()) {
+        "Hola $name,"
+    } else {
+        "Hola,"
     }
 }
 
