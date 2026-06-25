@@ -11,6 +11,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.mindflow.ui.presentation.authgate.AuthGateScreen
 import com.example.mindflow.ui.presentation.createidea.CreateIdeaScreen
 import com.example.mindflow.ui.presentation.ideadetail.IdeaDetailScreen
 import com.example.mindflow.ui.presentation.idealist.IdeaListScreen
@@ -40,8 +41,20 @@ fun MindFlowAppNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = "login"
+        startDestination = "auth_gate"
     ) {
+        composable("auth_gate") {
+            AuthGateScreen(
+                onRouteResolved = { route ->
+                    navController.navigate(route) {
+                        popUpTo("auth_gate") { inclusive = true }
+                        launchSingleTop = true
+                    }
+                },
+                viewModel = hiltViewModel()
+            )
+        }
+
         // Pantalla de Login
         composable("login") {
             LoginScreen(
