@@ -22,4 +22,8 @@ class RetrofitIdeaRemoteDataSourceImpl @Inject constructor(
     override suspend fun deleteIdea(ideaId: Int) {
         return apiService.deleteIdea(ideaId)
     }
+
+    override suspend fun getUserIdeas(userId: Int): List<IdeaDTO> {
+        return apiService.getUserIdeas(userId).ideas
+    }
 }
