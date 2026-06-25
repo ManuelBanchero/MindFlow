@@ -44,12 +44,12 @@ class RetrofitIdeaProcessorDataSourceImpl @Inject constructor(
     }
 
     override suspend fun expandIdeaWithAnswerQuestion(
-        ideaTitle: String,
-        ideaContent: List<StructuredSectionDTO>,
-        question: String,
-        questionDescription: String,
+        ideaId: Int,
+        questionId: Int,
         audioUri: Uri
-    ): ProcessedAnswerQuestionDTO {
-        TODO("Not yet implemented")
+    ): IdeaDTO {
+        val audioPart = context.audioUriToMultiPart(audioUri)
+
+        return apiService.answerQuestion(ideaId, questionId, audioPart)
     }
 }
