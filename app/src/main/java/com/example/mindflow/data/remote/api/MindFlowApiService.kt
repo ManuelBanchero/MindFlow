@@ -4,22 +4,26 @@ import com.example.mindflow.data.remote.dto.IdeaDTO
 import com.example.mindflow.data.remote.dto.LoginRequest
 import com.example.mindflow.data.remote.dto.RegisterRequest
 import com.example.mindflow.data.remote.dto.UserDTO
+import com.example.mindflow.data.remote.dto.UserIdeasResponse
 import okhttp3.MultipartBody
 import okhttp3.Request
 import retrofit2.http.Body
 import retrofit2.http.DELETE
+import retrofit2.http.GET
 import retrofit2.http.Multipart
 import retrofit2.http.POST
 import retrofit2.http.PUT
 import retrofit2.http.Part
 import retrofit2.http.Path
+import okhttp3.RequestBody
 
 interface MindFlowApiService {
 
     @Multipart
     @POST("ideas/process")
     suspend fun processIdea(
-        @Part audio: MultipartBody.Part
+        @Part audio: MultipartBody.Part,
+        @Part("userId") userId: RequestBody
     ): IdeaDTO
 
     @DELETE("ideas/{id}")
@@ -50,4 +54,9 @@ interface MindFlowApiService {
     suspend fun register(
         @Body request: RegisterRequest
     ): UserDTO
+
+    @GET("ideas/user/{userId}")
+    suspend fun getUserIdeas(
+        @Path("userId") userId: Int
+    ): UserIdeasResponse
 }
