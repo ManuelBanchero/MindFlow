@@ -34,6 +34,9 @@ interface IdeaDAO {
     @Query("SELECT * FROM questions WHERE id = :questionId")
     suspend fun getQuestionById(questionId: Int): QuestionEntity?
 
+    @Query("DELETE FROM questions WHERE idea_id = :ideaId")
+    suspend fun deleteQuestionsByIdeaId(ideaId: Int)
+
     @Query("DELETE FROM questions WHERE id = :questionId")
     suspend fun deleteQuestionById(questionId: Int)
 }

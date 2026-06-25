@@ -14,5 +14,7 @@ data class QuestionDTO (
     @SerialName("questionText")
     val questionText: String,
     @SerialName("description")
-    val description: String
+    val description: String,
+    @SerialName("wasAnswered")
+    val wasAnswered: Boolean = false
 )

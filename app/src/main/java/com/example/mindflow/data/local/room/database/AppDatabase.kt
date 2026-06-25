@@ -13,7 +13,7 @@ import com.example.mindflow.data.local.room.dao.UserDAO
     IdeaEntity::class,
     QuestionEntity::class,
     UserEntity::class],
-    version = 2,
+    version = 3,
     exportSchema = false)
 @TypeConverters(RoomConverters::class)
 abstract class AppDatabase: RoomDatabase() {
