@@ -22,6 +22,7 @@ fun MindFlowIconButton(
     icon: ImageVector,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
+    contentDescription: String? = null,
     containerColor: Color = MaterialTheme.colorScheme.primary,
     contentColor: Color = Color.White,
     size: Dp = 140.dp,
@@ -39,7 +40,7 @@ fun MindFlowIconButton(
     ) {
         Icon(
             imageVector = icon,
-            contentDescription = null,
+            contentDescription = contentDescription,
             modifier = Modifier.size(iconSize),
             tint = contentColor
         )
