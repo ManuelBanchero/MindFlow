@@ -12,11 +12,13 @@ class CreateIdeaUseCase @Inject constructor(
         if (audioUri.isBlank())
             return Result.failure(Exception("La dirección de archivo de audio no es válida"))
 
-        val processedIdea = ideaRepository.processIdea(audioUri).getOrElse { exception ->
+        val activeUser = userRepository.getActiveSession()
+            ?: return Result.failure(Exception("Ocurrió un error al intentar obtener el usuario"))
+
+        val processedIdea = ideaRepository.processIdea(audioUri, activeUser.id).getOrElse { exception ->
             val errorMessage = exception.message ?: "Error desconocido al procesar la idea"
             return Result.failure(Exception(errorMessage))
         }
-        val user = userRepository.getActiveSession()?: return Result.failure(Exception("Ocurrió un error al intentar obtener el usuario"))
-        return ideaRepository.saveIdea(processedIdea, user.id)
+        return ideaRepository.saveIdea(processedIdea, activeUser.id)
     }
 }
