@@ -2,7 +2,10 @@ package com.example.mindflow.data.repository
 
 import android.database.sqlite.SQLiteException
 import retrofit2.HttpException
+import androidx.room.withTransaction
 import com.example.mindflow.data.local.room.dao.UserDAO
+import com.example.mindflow.data.local.room.dao.IdeaDAO
+import com.example.mindflow.data.local.room.database.AppDatabase
 import com.example.mindflow.data.local.preferences.SessionPreferencesDataSource
 import com.example.mindflow.data.mapper.toDomain
 import com.example.mindflow.data.mapper.toEntity
@@ -19,7 +22,9 @@ import java.io.IOException
 import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
+    private val database: AppDatabase,
     private val userDao: UserDAO,
+    private val ideaDao: IdeaDAO,
     private val userRemoteDataSource: UserRemoteDataSource,
     private val sessionPreferencesDataSource: SessionPreferencesDataSource
 ): UserRepository {
@@ -95,7 +100,10 @@ class UserRepositoryImpl @Inject constructor(
 
     override suspend fun logOut(): Result<Unit> {
         return try {
-            userDao.deleteUser()
+            database.withTransaction {
+                userDao.deleteUser()
+                ideaDao.deleteAllIdeas()
+            }
             sessionPreferencesDataSource.setSessionActive(false)
             Result.success(Unit)
         } catch (e: SQLiteException) {
