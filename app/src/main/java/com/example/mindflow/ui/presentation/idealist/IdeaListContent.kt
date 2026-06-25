@@ -96,7 +96,9 @@ fun IdeaListContent(
                     when {
                         uiState.isLoading -> IdeaListLoadingState()
                         uiState.error != null -> IdeaListErrorState(uiState.error)
-                        uiState.ideas.isEmpty() -> EmptyIdeaState()
+                        uiState.ideas.isEmpty() -> EmptyIdeaState(
+                            onNavigateToCreateIdea = onNavigateToCreateIdea
+                        )
                         else -> IdeasState(
                             ideas = uiState.ideas,
                             onIdeaClick = onIdeaClick
@@ -239,7 +241,9 @@ private fun IdeaListErrorState(message: String) {
 }
 
 @Composable
-private fun EmptyIdeaState() {
+private fun EmptyIdeaState(
+    onNavigateToCreateIdea: () -> Unit
+) {
     val colors = MaterialTheme.mindFlowColors
 
     Column(
@@ -308,6 +312,7 @@ private fun EmptyIdeaState() {
                 .padding(horizontal = 24.dp)
                 .height(56.dp)
                 .shadow(18.dp, RoundedCornerShape(28.dp)),
+            onClick = onNavigateToCreateIdea,
             shape = RoundedCornerShape(28.dp),
             color = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary
