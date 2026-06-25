@@ -16,6 +16,7 @@ import com.example.mindflow.ui.presentation.ideadetail.IdeaDetailScreen
 import com.example.mindflow.ui.presentation.idealist.IdeaListScreen
 import com.example.mindflow.ui.presentation.login.LoginScreen
 import com.example.mindflow.ui.presentation.questions.QuestionsScreen
+import com.example.mindflow.ui.presentation.register.RegisterScreen
 import com.example.mindflow.ui.presentation.updateidea.UpdateIdeaScreen
 import com.example.mindflow.ui.theme.MindFlowTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -48,6 +49,25 @@ fun MindFlowAppNavigation() {
                     navController.navigate("create_idea") {
                         popUpTo("login") { inclusive = true }
                     }
+                },
+                onNavigateToRegister = {
+                    navController.navigate("register") {
+                        launchSingleTop = true
+                    }
+                },
+                viewModel = hiltViewModel()
+            )
+        }
+
+        composable("register") {
+            RegisterScreen(
+                onRegisterSuccess = {
+                    navController.navigate("create_idea") {
+                        popUpTo("register") { inclusive = true }
+                    }
+                },
+                onNavigateToLogin = {
+                    navController.popBackStack()
                 },
                 viewModel = hiltViewModel()
             )
