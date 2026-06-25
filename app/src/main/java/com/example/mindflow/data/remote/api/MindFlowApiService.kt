@@ -29,4 +29,12 @@ interface MindFlowApiService {
         @Path("id") id: Int,
         @Body request: IdeaDTO
     ): IdeaDTO
+
+    @Multipart
+    @POST("ideas/{id}/questions/{questionId}/answer")
+    suspend fun answerQuestion(
+        @Path("id") id: Int,
+        @Path("questionId") questionId: Int,
+        @Part audio: MultipartBody.Part
+    ): IdeaDTO
 }
