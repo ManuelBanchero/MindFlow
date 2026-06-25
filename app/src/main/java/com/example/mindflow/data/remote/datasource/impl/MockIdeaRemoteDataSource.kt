@@ -19,4 +19,8 @@ class MockIdeaRemoteDataSource @Inject constructor(): IdeaRemoteDataSource {
     override suspend fun deleteIdea(userId: Int) {
         return
     }
+
+    override suspend fun getUserIdeas(userId: Int): List<IdeaDTO> {
+        return emptyList()
+    }
 }
