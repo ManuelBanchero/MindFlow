@@ -11,6 +11,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 @Composable
 fun LoginScreen(
     onLoginSuccess: () -> Unit,
+    onNavigateToRegister: () -> Unit,
     viewModel: LoginViewModel
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -23,6 +24,7 @@ fun LoginScreen(
 
     LoginContent(
         uiState = uiState,
-        onEvent = { event -> viewModel.onEvent(event) }
+        onEvent = { event -> viewModel.onEvent(event) },
+        onNavigateToRegister = onNavigateToRegister
     )
 }
