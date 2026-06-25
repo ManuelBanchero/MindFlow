@@ -186,4 +186,20 @@ class QuestionsViewModel @Inject constructor(
                 }
         }
     }
+
+    fun onScreenLifecycleEnded() {
+        audioRecorder.cleanup()
+        _uiState.update {
+            it.copy(
+                activeQuestionId = null,
+                recordingState = RecordingState.Idle,
+                error = null
+            )
+        }
+    }
+
+    override fun onCleared() {
+        audioRecorder.cleanup()
+        super.onCleared()
+    }
 }

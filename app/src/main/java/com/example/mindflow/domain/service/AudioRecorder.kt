@@ -21,4 +21,6 @@ interface AudioRecorder {
     suspend fun stopRecord(): Result<String>
 
     suspend fun cancelRecord(): Result<Unit>
+
+    fun cleanup()
 }

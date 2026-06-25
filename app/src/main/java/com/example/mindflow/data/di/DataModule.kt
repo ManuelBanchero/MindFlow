@@ -6,6 +6,8 @@ import com.example.mindflow.data.local.hardware.AudioDataSource
 import com.example.mindflow.data.local.hardware.SpeechToTextDataSource
 import com.example.mindflow.data.local.hardware.impl.AndroidAudioDataSource
 import com.example.mindflow.data.local.hardware.impl.MockSpeechToTextDataSource
+import com.example.mindflow.data.local.preferences.SessionPreferencesDataSource
+import com.example.mindflow.data.local.preferences.impl.DataStoreSessionPreferencesDataSource
 import com.example.mindflow.data.remote.datasource.IdeaProcessorDataSource
 import com.example.mindflow.data.remote.datasource.IdeaRemoteDataSource
 import com.example.mindflow.data.remote.datasource.UserRemoteDataSource
@@ -14,6 +16,7 @@ import com.example.mindflow.data.remote.datasource.impl.MockIdeaRemoteDataSource
 import com.example.mindflow.data.remote.datasource.impl.MockUserRemoteDataSource
 import com.example.mindflow.data.remote.datasource.impl.RetrofitIdeaProcessorDataSourceImpl
 import com.example.mindflow.data.remote.datasource.impl.RetrofitIdeaRemoteDataSourceImpl
+import com.example.mindflow.data.remote.datasource.impl.RetrofitUserRemoteDataSourceImpl
 import com.example.mindflow.data.repository.IdeaRepositoryImpl
 import com.example.mindflow.data.repository.UserRepositoryImpl
 import com.example.mindflow.data.service.AudioRecorderImpl
@@ -45,7 +48,8 @@ abstract class DataModule {
     @Binds
     @Singleton
     abstract fun bindUserRemoteDataSource(
-        mockUserRemoteDataSource: MockUserRemoteDataSource
+        //mockUserRemoteDataSource: MockUserRemoteDataSource,
+        retrofitUserRemoteDataSource: RetrofitUserRemoteDataSourceImpl
     ): UserRemoteDataSource
 
     @Binds
@@ -85,4 +89,10 @@ abstract class DataModule {
     abstract fun bindAudioRecorder(
         audioRecorderImpl: AudioRecorderImpl
     ): AudioRecorder
+
+    @Binds
+    @Singleton
+    abstract fun bindSessionPreferencesDataSource(
+        dataStoreSessionPreferencesDataSource: DataStoreSessionPreferencesDataSource
+    ): SessionPreferencesDataSource
 }

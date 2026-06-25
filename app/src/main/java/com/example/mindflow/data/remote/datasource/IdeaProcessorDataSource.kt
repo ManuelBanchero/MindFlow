@@ -7,7 +7,7 @@ import com.example.mindflow.data.remote.dto.ProcessedIdeaDraftDTO
 import com.example.mindflow.data.remote.dto.StructuredSectionDTO
 
 interface IdeaProcessorDataSource {
-    suspend fun processIdea(audioUri: Uri): IdeaDTO
+    suspend fun processIdea(audioUri: Uri, userId: Int): IdeaDTO
     suspend fun deleteAudio(audioUri: Uri)
 
     suspend fun expandIdeaWithNewContext(

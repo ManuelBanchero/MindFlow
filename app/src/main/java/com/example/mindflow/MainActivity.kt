@@ -6,17 +6,19 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.Composable
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.example.mindflow.ui.presentation.authgate.AuthGateScreen
 import com.example.mindflow.ui.presentation.createidea.CreateIdeaScreen
 import com.example.mindflow.ui.presentation.ideadetail.IdeaDetailScreen
 import com.example.mindflow.ui.presentation.idealist.IdeaListScreen
 import com.example.mindflow.ui.presentation.login.LoginScreen
+import com.example.mindflow.ui.presentation.logout.LogoutScreen
 import com.example.mindflow.ui.presentation.questions.QuestionsScreen
+import com.example.mindflow.ui.presentation.register.RegisterScreen
 import com.example.mindflow.ui.presentation.updateidea.UpdateIdeaScreen
 import com.example.mindflow.ui.theme.MindFlowTheme
 import dagger.hilt.android.AndroidEntryPoint
@@ -40,14 +42,60 @@ fun MindFlowAppNavigation() {
 
     NavHost(
         navController = navController,
-        startDestination = "login"
+        startDestination = "auth_gate"
     ) {
+        composable("auth_gate") {
+            AuthGateScreen(
+                onRouteResolved = { route ->
+                    navController.navigate(route) {
+                        popUpTo("auth_gate") { inclusive = true }
+                        launchSingleTop = true
+                    }
+                },
+                viewModel = hiltViewModel()
+            )
+        }
+
         // Pantalla de Login
         composable("login") {
             LoginScreen(
                 onLoginSuccess = {
                     navController.navigate("create_idea") {
                         popUpTo("login") { inclusive = true }
+                    }
+                },
+                onNavigateToRegister = {
+                    navController.navigate("register") {
+                        launchSingleTop = true
+                    }
+                },
+                viewModel = hiltViewModel()
+            )
+        }
+
+        composable("register") {
+            RegisterScreen(
+                onRegisterSuccess = {
+                    navController.navigate("create_idea") {
+                        popUpTo("register") { inclusive = true }
+                    }
+                },
+                onNavigateToLogin = {
+                    navController.popBackStack()
+                },
+                viewModel = hiltViewModel()
+            )
+        }
+
+        composable("logout") {
+            LogoutScreen(
+                onBack = {
+                    navController.popBackStack()
+                },
+                onLogoutSuccess = {
+                    navController.navigate("auth_gate") {
+                        popUpTo(navController.graph.id) { inclusive = true }
+                        launchSingleTop = true
                     }
                 },
                 viewModel = hiltViewModel()
@@ -66,6 +114,11 @@ fun MindFlowAppNavigation() {
                         launchSingleTop = true
                     }
                 },
+                onNavigateToLogout = {
+                    navController.navigate("logout") {
+                        launchSingleTop = true
+                    }
+                },
                 viewModel = hiltViewModel()
             )
         }
@@ -78,6 +131,11 @@ fun MindFlowAppNavigation() {
                 },
                 onNavigateToCreateIdea = {
                     navController.navigate("create_idea") {
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToLogout = {
+                    navController.navigate("logout") {
                         launchSingleTop = true
                     }
                 },

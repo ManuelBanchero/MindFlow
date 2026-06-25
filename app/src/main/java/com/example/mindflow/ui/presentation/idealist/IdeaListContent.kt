@@ -63,6 +63,7 @@ import java.time.format.DateTimeFormatter
 fun IdeaListContent(
     uiState: IdeaListUiState,
     onNavigateToCreateIdea: () -> Unit,
+    onNavigateToLogout: () -> Unit,
     onIdeaClick: (Int) -> Unit
 ) {
     IdeaListBackground {
@@ -81,7 +82,9 @@ fun IdeaListContent(
             ) {
                 Spacer(modifier = Modifier.height(24.dp))
 
-                IdeaListTopBar()
+                IdeaListTopBar(
+                    onNavigateToLogout = onNavigateToLogout
+                )
 
                 Spacer(modifier = Modifier.height(28.dp))
 
@@ -93,7 +96,9 @@ fun IdeaListContent(
                     when {
                         uiState.isLoading -> IdeaListLoadingState()
                         uiState.error != null -> IdeaListErrorState(uiState.error)
-                        uiState.ideas.isEmpty() -> EmptyIdeaState()
+                        uiState.ideas.isEmpty() -> EmptyIdeaState(
+                            onNavigateToCreateIdea = onNavigateToCreateIdea
+                        )
                         else -> IdeasState(
                             ideas = uiState.ideas,
                             onIdeaClick = onIdeaClick
@@ -143,7 +148,9 @@ private fun IdeaListBackground(
 }
 
 @Composable
-private fun IdeaListTopBar() {
+private fun IdeaListTopBar(
+    onNavigateToLogout: () -> Unit
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -170,7 +177,7 @@ private fun IdeaListTopBar() {
         TopIconButton(
             icon = Icons.Default.Person,
             contentDescription = "Perfil",
-            onClick = { }
+            onClick = onNavigateToLogout
         )
     }
 }
@@ -234,7 +241,9 @@ private fun IdeaListErrorState(message: String) {
 }
 
 @Composable
-private fun EmptyIdeaState() {
+private fun EmptyIdeaState(
+    onNavigateToCreateIdea: () -> Unit
+) {
     val colors = MaterialTheme.mindFlowColors
 
     Column(
@@ -303,6 +312,7 @@ private fun EmptyIdeaState() {
                 .padding(horizontal = 24.dp)
                 .height(56.dp)
                 .shadow(18.dp, RoundedCornerShape(28.dp)),
+            onClick = onNavigateToCreateIdea,
             shape = RoundedCornerShape(28.dp),
             color = MaterialTheme.colorScheme.primary,
             contentColor = MaterialTheme.colorScheme.onPrimary

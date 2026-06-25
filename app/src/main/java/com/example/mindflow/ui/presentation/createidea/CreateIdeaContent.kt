@@ -66,6 +66,7 @@ fun CreateIdeaContent(
     uiState: CreateIdeaUiState,
     onEvent: (CreateIdeaEvent) -> Unit,
     onNavigateToIdeaList: () -> Unit,
+    onNavigateToLogout: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -97,6 +98,7 @@ fun CreateIdeaContent(
         onPauseAction = { onEvent(CreateIdeaEvent.OnTogglePause) },
         onCancelAction = { onEvent(CreateIdeaEvent.OnCancelIdea) },
         onNavigateToIdeaList = onNavigateToIdeaList,
+        onNavigateToLogout = onNavigateToLogout,
         modifier = modifier
     )
 }
@@ -108,6 +110,7 @@ private fun CreateIdeaContentLayout(
     onPauseAction: () -> Unit,
     onCancelAction: () -> Unit,
     onNavigateToIdeaList: () -> Unit,
+    onNavigateToLogout: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val colors = MaterialTheme.mindFlowColors
@@ -124,8 +127,8 @@ private fun CreateIdeaContentLayout(
         else -> "¿Listo para soltar tus ideas?"
     }
     val subtitle = when {
-        uiState.isProcessing -> "Estamos convirtiendo tu voz en una idea organizada."
-        isRecording -> "Hablá con naturalidad. Cuando termines, tocá finalizar."
+        uiState.isProcessing -> "Convirtiendo tu voz en una idea organizada."
+        isRecording -> "Cuando termines, tocá finalizar."
         isPaused -> "Podés continuar grabando o cancelar esta captura."
         uiState.recordingState is RecordingState.Error -> "Revisá el permiso del micrófono e intentá de nuevo."
         else -> "Presioná el micrófono y comenzá a hablar."
@@ -148,12 +151,14 @@ private fun CreateIdeaContentLayout(
             ) {
                 Spacer(modifier = Modifier.height(28.dp))
 
-                CreateIdeaTopBar()
+                CreateIdeaTopBar(
+                    onNavigateToLogout = onNavigateToLogout
+                )
 
                 Spacer(modifier = Modifier.height(36.dp))
 
                 Text(
-                    text = "Hola Manuel,",
+                    text = buildGreeting(uiState.userFirstName),
                     style = MaterialTheme.typography.titleMedium,
                     color = if (isDark) MaterialTheme.colorScheme.onBackground else colors.textLabel,
                     fontWeight = FontWeight.Bold,
@@ -227,6 +232,15 @@ private fun CreateIdeaContentLayout(
     }
 }
 
+private fun buildGreeting(firstName: String): String {
+    val name = firstName.trim()
+    return if (name.isNotEmpty()) {
+        "Hola $name,"
+    } else {
+        "Hola,"
+    }
+}
+
 @Composable
 private fun CreateIdeaBackground(
     modifier: Modifier = Modifier,
@@ -265,7 +279,9 @@ private fun CreateIdeaBackground(
 }
 
 @Composable
-private fun CreateIdeaTopBar() {
+private fun CreateIdeaTopBar(
+    onNavigateToLogout: () -> Unit
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -280,7 +296,7 @@ private fun CreateIdeaTopBar() {
         TopIconButton(
             icon = Icons.Default.Person,
             contentDescription = "Perfil",
-            onClick = { }
+            onClick = onNavigateToLogout
         )
     }
 }
@@ -324,7 +340,7 @@ private fun VoiceOrb(
     isPaused: Boolean,
     isProcessing: Boolean
 ) {
-    val animationSpeed = if (isRecording || isProcessing) 2f else 0.5f
+    val animationSpeed = if (isRecording) 2f else 0.5f
 
     Box(
         modifier = Modifier.size(284.dp),

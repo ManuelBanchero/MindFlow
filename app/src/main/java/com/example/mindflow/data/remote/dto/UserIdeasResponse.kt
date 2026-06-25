@@ -4,9 +4,7 @@ import kotlinx.serialization.SerialName
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class LoginRequest(
-    @SerialName("mail")
-    val mail: String,
-    @SerialName("password")
-    val password: String
+data class UserIdeasResponse(
+    @SerialName("ideas")
+    val ideas: List<IdeaDTO>
 )

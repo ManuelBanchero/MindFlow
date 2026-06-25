@@ -46,3 +46,5 @@ fun Context.audioUriToMultiPart(
         body = requestBody
     )
 }
+
+fun Int.toTextRequestBody() = toString().toRequestBody("text/plain".toMediaType()) // helper for userId Int

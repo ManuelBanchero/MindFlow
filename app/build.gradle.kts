@@ -82,6 +82,9 @@ dependencies {
     // Gemini
     implementation(libs.google.generativeai)
 
+    // DataStore
+    implementation(libs.androidx.datastore.preferences)
+
     // Lottie
     implementation(libs.dotlottie.android)
 }

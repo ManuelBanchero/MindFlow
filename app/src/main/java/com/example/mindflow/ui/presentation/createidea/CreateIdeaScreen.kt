@@ -4,11 +4,13 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.mindflow.ui.components.RecordingLifecycleEffect
 
 @Composable
 fun CreateIdeaScreen(
     onCreateIdeaSuccess: (Int) -> Unit,
     onNavigateToIdeaList: () -> Unit,
+    onNavigateToLogout: () -> Unit,
     viewModel: CreateIdeaViewModel
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -20,9 +22,14 @@ fun CreateIdeaScreen(
         }
     }
 
+    RecordingLifecycleEffect(
+        onCleanup = viewModel::onScreenLifecycleEnded
+    )
+
     CreateIdeaContent(
         uiState,
         onEvent = { event -> viewModel.onEvent(event) },
-        onNavigateToIdeaList = onNavigateToIdeaList
+        onNavigateToIdeaList = onNavigateToIdeaList,
+        onNavigateToLogout = onNavigateToLogout
     )
 }

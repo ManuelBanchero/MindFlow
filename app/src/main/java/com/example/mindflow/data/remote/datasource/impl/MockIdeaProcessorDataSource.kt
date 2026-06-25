@@ -14,12 +14,12 @@ import javax.inject.Inject
 
 class MockIdeaProcessorDataSourceImpl @Inject constructor() : IdeaProcessorDataSource {
 
-    override suspend fun processIdea(audioUri: Uri): IdeaDTO {
+    override suspend fun processIdea(audioUri: Uri, userId: Int): IdeaDTO {
         // Simulating an API response
         delay(2000)
         return IdeaDTO(
             id = 1,
-            userId = 1,
+            userId = userId,
             title = "MindFlow: Captura Inteligente de Ideas con Arquitectura Limpia",
             categories = listOf("Desarrollo Mobile", "Android"),
             summarizeContent = "Una aplicación Android diseñada para capturar pensamientos desordenados o audios en crudo y estructurarlos automáticamente mediante Inteligencia Artificial.",

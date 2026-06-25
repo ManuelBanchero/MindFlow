@@ -1,9 +1,7 @@
-package com.example.mindflow.ui.presentation.login
+package com.example.mindflow.ui.presentation.register
 
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,9 +15,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Visibility
 import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.ButtonDefaults
@@ -41,23 +40,26 @@ import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.mindflow.ui.components.MindFlowAuthCard
-import com.example.mindflow.ui.components.MindFlowAuthBrandHeader
 import com.example.mindflow.ui.components.MindFlowAuthErrorMessage
+import com.example.mindflow.ui.components.MindFlowAuthHero
 import com.example.mindflow.ui.components.MindFlowBackground
 import com.example.mindflow.ui.components.MindFlowButton
 import com.example.mindflow.ui.components.MindFlowTextField
 import com.example.mindflow.ui.theme.mindFlowColors
 
 @Composable
-fun LoginContent(
-    uiState: LoginUiState,
-    onEvent: (LoginEvent) -> Unit,
-    onNavigateToRegister: () -> Unit,
+fun RegisterContent(
+    uiState: RegisterUiState,
+    onEvent: (RegisterEvent) -> Unit,
+    onNavigateToLogin: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     var passwordVisible by remember { mutableStateOf(false) }
     val colors = MaterialTheme.mindFlowColors
-    val isFormReady = uiState.email.isNotBlank() && uiState.password.isNotBlank()
+    val isFormReady = uiState.firstName.isNotBlank() &&
+        uiState.lastName.isNotBlank() &&
+        uiState.mail.isNotBlank() &&
+        uiState.password.isNotBlank()
 
     MindFlowBackground(modifier = modifier) {
         Column(
@@ -74,51 +76,62 @@ fun LoginContent(
                     .fillMaxWidth()
                     .widthIn(max = 430.dp)
             ) {
-                Spacer(modifier = Modifier.height(28.dp))
+                Spacer(modifier = Modifier.height(52.dp))
 
-                MindFlowAuthBrandHeader()
-
-                Spacer(modifier = Modifier.height(44.dp))
-
-                Text(
-                    text = "Ingresá a tu espacio",
-                    style = MaterialTheme.typography.headlineMedium,
-                    color = MaterialTheme.colorScheme.onBackground
+                MindFlowAuthHero(
+                    title = "Crea tu cuenta",
+                    subtitle = "Unite a todos los que ya decidieron dejar de procrastinar y pasar a la acción al darle vida a sus ideas"
                 )
 
-                Spacer(modifier = Modifier.height(10.dp))
-
-                Text(
-                    text = "Capturá ideas, ordená pensamientos y retomá lo importante cuando quieras.",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = colors.textSecondary,
-                )
-
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(42.dp))
 
                 MindFlowAuthCard {
                     Text(
-                        text = "Inicio de sesión",
+                        text = "Registro",
                         style = MaterialTheme.typography.titleMedium,
                         color = MaterialTheme.colorScheme.onSurface,
-                        fontWeight = androidx.compose.ui.text.font.FontWeight.Bold
+                        fontWeight = FontWeight.Bold
                     )
 
                     Spacer(modifier = Modifier.height(6.dp))
 
-                        Text(
-                            text = "Usá tus credenciales para continuar.",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = colors.textSecondary,
+                    Text(
+                        text = "Completá tus datos para empezar.",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = colors.textSecondary,
                         fontWeight = FontWeight.Medium
                     )
 
                     Spacer(modifier = Modifier.height(20.dp))
 
                     MindFlowTextField(
-                        value = uiState.email,
-                        onValueChange = { onEvent(LoginEvent.EmailChanged(it)) },
-                        label = "Email",
+                        value = uiState.firstName,
+                        onValueChange = { onEvent(RegisterEvent.FirstNameChanged(it)) },
+                        label = "Nombre",
+                        placeholder = "Tu nombre",
+                        enabled = !uiState.isLoading,
+                        leadingIcon = Icons.Default.Person,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+                    )
+
+                    Spacer(modifier = Modifier.height(18.dp))
+
+                    MindFlowTextField(
+                        value = uiState.lastName,
+                        onValueChange = { onEvent(RegisterEvent.LastNameChanged(it)) },
+                        label = "Apellido",
+                        placeholder = "Tu apellido",
+                        enabled = !uiState.isLoading,
+                        leadingIcon = Icons.Default.Person,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text)
+                    )
+
+                    Spacer(modifier = Modifier.height(18.dp))
+
+                    MindFlowTextField(
+                        value = uiState.mail,
+                        onValueChange = { onEvent(RegisterEvent.MailChanged(it)) },
+                        label = "Mail",
                         placeholder = "nombre@ejemplo.com",
                         enabled = !uiState.isLoading,
                         leadingIcon = Icons.Default.Email,
@@ -129,7 +142,7 @@ fun LoginContent(
 
                     MindFlowTextField(
                         value = uiState.password,
-                        onValueChange = { onEvent(LoginEvent.PasswordChanged(it)) },
+                        onValueChange = { onEvent(RegisterEvent.PasswordChanged(it)) },
                         label = "Contraseña",
                         placeholder = "Ingresá tu contraseña",
                         enabled = !uiState.isLoading,
@@ -153,39 +166,19 @@ fun LoginContent(
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password)
                     )
 
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.End
-                    ) {
-                        TextButton(
-                            onClick = { },
-                            enabled = !uiState.isLoading,
-                            colors = ButtonDefaults.textButtonColors(
-                                contentColor = MaterialTheme.colorScheme.primary,
-                                disabledContentColor = colors.textSecondary
-                            )
-                        ) {
-                        Text(
-                            text = "Olvidé mi contraseña",
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    }
-                }
-
                     if (uiState.error != null) {
-                        MindFlowAuthErrorMessage(message = uiState.error)
                         Spacer(modifier = Modifier.height(18.dp))
+                        MindFlowAuthErrorMessage(message = uiState.error)
                     } else {
-                        Spacer(modifier = Modifier.height(6.dp))
+                        Spacer(modifier = Modifier.height(18.dp))
                     }
 
                     MindFlowButton(
-                        text = "Continuar",
-                        onClick = { onEvent(LoginEvent.OnLoginClick) },
+                        text = "Registrate",
+                        onClick = { onEvent(RegisterEvent.OnRegisterClick) },
                         isLoading = uiState.isLoading,
                         enabled = isFormReady,
-                        icon = Icons.AutoMirrored.Filled.ArrowForward
+                        icon = Icons.Default.Check
                     )
                 }
 
@@ -198,14 +191,17 @@ fun LoginContent(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 TextButton(
-                    onClick = onNavigateToRegister,
+                    onClick = onNavigateToLogin,
                     modifier = Modifier.fillMaxWidth(),
                     enabled = !uiState.isLoading,
+                    colors = ButtonDefaults.textButtonColors(
+                        contentColor = colors.ctaText,
+                        disabledContentColor = colors.textSecondary
+                    )
                 ) {
                     Text(
-                        text = "¿No tenés cuenta? Crear una cuenta",
+                        text = "¿Ya tenés cuenta? Iniciá sesión",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = colors.ctaText,
                         fontWeight = FontWeight.Bold,
                         textAlign = TextAlign.Center
                     )

@@ -5,10 +5,12 @@ import com.example.mindflow.data.remote.dto.IdeaDTO
 import kotlinx.coroutines.flow.Flow
 
 interface IdeaRepository {
-    suspend fun processIdea(audioUri: String): Result<IdeaDTO>
+    suspend fun processIdea(audioUri: String, userId: Int): Result<IdeaDTO>
     suspend fun saveIdea(ideaDTO: IdeaDTO, userId: Int): Result<Int> // Returns the new Idea id (the app need it to navigate to the Idea detail page)
+    suspend fun syncUserIdeas(userId: Int): Result<Unit>
     suspend fun updateIdea(idea: Idea): Result<Unit>
     suspend fun deleteIdea(idea: Idea): Result<Unit>
+    suspend fun deleteAllLocalIdeas(): Result<Unit>
     suspend fun expandIdea(idea: Idea, audioUri: String): Result<Unit>
     suspend fun answerQuestion(
         idea: Idea,

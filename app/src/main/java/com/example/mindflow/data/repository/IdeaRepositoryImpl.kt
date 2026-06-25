@@ -27,12 +27,12 @@ class IdeaRepositoryImpl @Inject constructor(
    private val ideaProcessorDataSource: IdeaProcessorDataSource
 ): IdeaRepository {
 
-    override suspend fun processIdea(audioUri: String): Result<IdeaDTO> {
+    override suspend fun processIdea(audioUri: String, userId: Int): Result<IdeaDTO> {
         return try {
             val uri: Uri = audioUri.toUri()
 
             // Process audio and create an Idea (also saves the idea in the cloud)
-            val ideaDto = ideaProcessorDataSource.processIdea(uri)
+            val ideaDto = ideaProcessorDataSource.processIdea(uri, userId)
 
             // Deletes audio from user storage
             ideaProcessorDataSource.deleteAudio(uri)
@@ -45,19 +45,34 @@ class IdeaRepositoryImpl @Inject constructor(
 
     override suspend fun saveIdea(ideaDTO: IdeaDTO, userId: Int): Result<Int> {
         return try {
-            database.withTransaction {
-                ideaDao.upsertIdea(ideaDTO.toEntity())
-                ideaDao.upsertQuestions(
-                    ideaDTO.questions.mapIndexed { index, questionDto ->
-                        questionDto.toEntity(
-                            generatedId = if (questionDto.id != 0) questionDto.id else index + 1,
-                            ideaIdOverride = ideaDTO.id
-                        )
-                    }
-                )
-            }
+            persistIdeaLocally(ideaDTO)
 
             Result.success(ideaDTO.id)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun syncUserIdeas(userId: Int): Result<Unit> {
+        return try {
+            val remoteIdeas = ideaRemoteDataSource.getUserIdeas(userId)
+
+            database.withTransaction {
+                ideaDao.deleteAllIdeas()
+                remoteIdeas.forEach { ideaDto ->
+                    ideaDao.upsertIdea(ideaDto.toEntity())
+                    ideaDao.upsertQuestions(
+                        ideaDto.questions.mapIndexed { index, questionDto ->
+                            questionDto.toEntity(
+                                generatedId = if (questionDto.id != 0) questionDto.id else index + 1,
+                                ideaIdOverride = ideaDto.id
+                            )
+                        }
+                    )
+                }
+            }
+
+            Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
         }
@@ -82,6 +97,17 @@ class IdeaRepositoryImpl @Inject constructor(
         return try {
             ideaRemoteDataSource.deleteIdea(idea.id)
             ideaDao.deleteIdea(idea.toEntity())
+            Result.success(Unit)
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun deleteAllLocalIdeas(): Result<Unit> {
+        return try {
+            database.withTransaction {
+                ideaDao.deleteAllIdeas()
+            }
             Result.success(Unit)
         } catch (e: Exception) {
             Result.failure(e)
@@ -194,5 +220,19 @@ class IdeaRepositoryImpl @Inject constructor(
             .map { it.trim() }
             .filter { it.isNotBlank() }
             .distinctBy { it.lowercase() }
+    }
+
+    private suspend fun persistIdeaLocally(ideaDTO: IdeaDTO) {
+        database.withTransaction {
+            ideaDao.upsertIdea(ideaDTO.toEntity())
+            ideaDao.upsertQuestions(
+                ideaDTO.questions.mapIndexed { index, questionDto ->
+                    questionDto.toEntity(
+                        generatedId = if (questionDto.id != 0) questionDto.id else index + 1,
+                        ideaIdOverride = ideaDTO.id
+                    )
+                }
+            )
+        }
     }
 }
