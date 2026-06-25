@@ -63,6 +63,7 @@ import java.time.format.DateTimeFormatter
 fun IdeaListContent(
     uiState: IdeaListUiState,
     onNavigateToCreateIdea: () -> Unit,
+    onNavigateToLogout: () -> Unit,
     onIdeaClick: (Int) -> Unit
 ) {
     IdeaListBackground {
@@ -81,7 +82,9 @@ fun IdeaListContent(
             ) {
                 Spacer(modifier = Modifier.height(24.dp))
 
-                IdeaListTopBar()
+                IdeaListTopBar(
+                    onNavigateToLogout = onNavigateToLogout
+                )
 
                 Spacer(modifier = Modifier.height(28.dp))
 
@@ -143,7 +146,9 @@ private fun IdeaListBackground(
 }
 
 @Composable
-private fun IdeaListTopBar() {
+private fun IdeaListTopBar(
+    onNavigateToLogout: () -> Unit
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -170,7 +175,7 @@ private fun IdeaListTopBar() {
         TopIconButton(
             icon = Icons.Default.Person,
             contentDescription = "Perfil",
-            onClick = { }
+            onClick = onNavigateToLogout
         )
     }
 }
