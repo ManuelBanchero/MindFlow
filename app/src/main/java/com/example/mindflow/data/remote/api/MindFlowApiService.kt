@@ -1,6 +1,9 @@
 package com.example.mindflow.data.remote.api
 
 import com.example.mindflow.data.remote.dto.IdeaDTO
+import com.example.mindflow.data.remote.dto.LoginRequest
+import com.example.mindflow.data.remote.dto.RegisterRequest
+import com.example.mindflow.data.remote.dto.UserDTO
 import okhttp3.MultipartBody
 import okhttp3.Request
 import retrofit2.http.Body
@@ -37,4 +40,14 @@ interface MindFlowApiService {
         @Path("questionId") questionId: Int,
         @Part audio: MultipartBody.Part
     ): IdeaDTO
+
+    @POST("auth/login")
+    suspend fun login(
+        @Body request: LoginRequest
+    ): UserDTO
+
+    @POST("auth/register")
+    suspend fun register(
+        @Body request: RegisterRequest
+    ): UserDTO
 }
