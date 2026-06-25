@@ -27,4 +27,6 @@ data class QuestionEntity(
     @ColumnInfo(name = "question_text")
     val questionText: String,
     val description: String,
+    @ColumnInfo(name = "was_answered")
+    val wasAnswered: Boolean = false,
 )

@@ -5,5 +5,6 @@ data class Question(
     val ideaId: Int,
     val category: String,
     val questionText: String,
-    val description: String
-    )
+    val description: String,
+    val wasAnswered: Boolean = false
+)
