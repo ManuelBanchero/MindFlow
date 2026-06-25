@@ -8,6 +8,7 @@ interface UserRepository {
     suspend fun createUser(registrationForm: RegistrationForm): Result<Unit>
     suspend fun validateCredentials(loginForm: LoginForm): Result<Unit>
     suspend fun getActiveSession(): User?
+    suspend fun isSessionActive(): Boolean
     suspend fun logOut(): Result<Unit>
     suspend fun subscribeToPlan(userId: Int): Result<User>
 }

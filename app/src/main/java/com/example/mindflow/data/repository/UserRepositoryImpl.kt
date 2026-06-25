@@ -3,6 +3,7 @@ package com.example.mindflow.data.repository
 import android.database.sqlite.SQLiteException
 import retrofit2.HttpException
 import com.example.mindflow.data.local.room.dao.UserDAO
+import com.example.mindflow.data.local.preferences.SessionPreferencesDataSource
 import com.example.mindflow.data.mapper.toDomain
 import com.example.mindflow.data.mapper.toEntity
 import com.example.mindflow.data.remote.datasource.UserRemoteDataSource
@@ -19,7 +20,8 @@ import javax.inject.Inject
 
 class UserRepositoryImpl @Inject constructor(
     private val userDao: UserDAO,
-    private val userRemoteDataSource: UserRemoteDataSource
+    private val userRemoteDataSource: UserRemoteDataSource,
+    private val sessionPreferencesDataSource: SessionPreferencesDataSource
 ): UserRepository {
     override suspend fun createUser(registrationForm: RegistrationForm): Result<Unit> {
         return try {
@@ -34,6 +36,7 @@ class UserRepositoryImpl @Inject constructor(
             val user: UserDTO = userRemoteDataSource.register(registrationRequest)
             // Save user locally
             userDao.insertUser(user.toEntity())
+            sessionPreferencesDataSource.setSessionActive(true)
 
             Result.success(Unit)
         } catch (e: HttpException) {
@@ -63,6 +66,7 @@ class UserRepositoryImpl @Inject constructor(
 
             // Save user locally
             userDao.insertUser(user.toEntity())
+            sessionPreferencesDataSource.setSessionActive(true)
 
             Result.success(Unit)
         } catch (e: HttpException) {
@@ -85,13 +89,20 @@ class UserRepositoryImpl @Inject constructor(
         return activeUser?.toDomain()
     }
 
+    override suspend fun isSessionActive(): Boolean {
+        return sessionPreferencesDataSource.isSessionActive()
+    }
+
     override suspend fun logOut(): Result<Unit> {
         return try {
             userDao.deleteUser()
+            sessionPreferencesDataSource.setSessionActive(false)
             Result.success(Unit)
         } catch (e: SQLiteException) {
+            runCatching { sessionPreferencesDataSource.setSessionActive(false) }
             Result.failure(e)
         } catch (e: Exception) {
+            runCatching { sessionPreferencesDataSource.setSessionActive(false) }
             Result.failure(e)
         }
     }
