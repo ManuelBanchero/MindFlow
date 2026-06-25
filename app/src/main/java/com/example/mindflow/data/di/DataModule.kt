@@ -14,6 +14,7 @@ import com.example.mindflow.data.remote.datasource.impl.MockIdeaRemoteDataSource
 import com.example.mindflow.data.remote.datasource.impl.MockUserRemoteDataSource
 import com.example.mindflow.data.remote.datasource.impl.RetrofitIdeaProcessorDataSourceImpl
 import com.example.mindflow.data.remote.datasource.impl.RetrofitIdeaRemoteDataSourceImpl
+import com.example.mindflow.data.remote.datasource.impl.RetrofitUserRemoteDataSourceImpl
 import com.example.mindflow.data.repository.IdeaRepositoryImpl
 import com.example.mindflow.data.repository.UserRepositoryImpl
 import com.example.mindflow.data.service.AudioRecorderImpl
@@ -45,7 +46,8 @@ abstract class DataModule {
     @Binds
     @Singleton
     abstract fun bindUserRemoteDataSource(
-        mockUserRemoteDataSource: MockUserRemoteDataSource
+        //mockUserRemoteDataSource: MockUserRemoteDataSource,
+        retrofitUserRemoteDataSource: RetrofitUserRemoteDataSourceImpl
     ): UserRemoteDataSource
 
     @Binds
