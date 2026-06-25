@@ -90,22 +90,24 @@ class AudioRecorderImpl @Inject constructor(
     }
 
     override suspend fun cancelRecord(): Result<Unit> {
-        return try {
+        cleanup()
+        return Result.success(Unit)
+    }
+
+    override fun cleanup() {
+        try {
             audioDataSource.stop()
-
-            currentTempFile?.let { tempFile ->
-                if (tempFile.exists()) {
-                    tempFile.delete()
-                }
-            }
-
-            _recordingState.value = RecordingState.Idle
-            currentTempFile = null
-
-            Result.success(Unit)
         } catch (e: Exception) {
-            _recordingState.value = RecordingState.Error(e.message ?: "Error al cancelar la grabación")
-            Result.failure(e)
+            // Ignoramos los errores de stop durante limpieza para no bloquear la salida de pantalla.
         }
+
+        currentTempFile?.let { tempFile ->
+            if (tempFile.exists()) {
+                tempFile.delete()
+            }
+        }
+
+        _recordingState.value = RecordingState.Idle
+        currentTempFile = null
     }
 }
