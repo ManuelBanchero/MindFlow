@@ -55,6 +55,7 @@ import com.lottiefiles.dotlottie.core.compose.ui.DotLottieAnimation
 import com.lottiefiles.dotlottie.core.util.DotLottieSource
 import com.example.mindflow.domain.service.RecordingState
 import com.example.mindflow.ui.components.MindFlowBackground
+import com.example.mindflow.ui.components.MindFlowCircularActionButton
 import com.example.mindflow.ui.theme.mindFlowColors
 
 private const val WAVE_LOTTIE_ASSET = "animations/animation_water.json"
@@ -416,33 +417,15 @@ private fun CaptureButton(
     onClick: () -> Unit
 ) {
     val isDark = isSystemInDarkTheme()
-
-    Surface(
+    MindFlowCircularActionButton(
         onClick = onClick,
         enabled = !isProcessing,
-        modifier = Modifier
-            .size(128.dp)
-            .shadow(22.dp, CircleShape),
-        shape = CircleShape,
-        color = if (isDark) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.primary,
+        isLoading = isProcessing,
+        icon = if (isActive) Icons.Default.Stop else Icons.Default.Mic,
+        contentDescription = if (isActive) "Finalizar grabación" else "Comenzar grabación",
+        containerColor = if (isDark) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.primary,
         contentColor = if (isDark) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onPrimary
-    ) {
-        Box(contentAlignment = Alignment.Center) {
-            if (isProcessing) {
-                CircularProgressIndicator(
-                    modifier = Modifier.size(42.dp),
-                    strokeWidth = 4.dp,
-                    color = if (isDark) MaterialTheme.colorScheme.onPrimaryContainer else MaterialTheme.colorScheme.onPrimary
-                )
-            } else {
-                Icon(
-                    imageVector = if (isActive) Icons.Default.Stop else Icons.Default.Mic,
-                    contentDescription = if (isActive) "Finalizar grabación" else "Comenzar grabación",
-                    modifier = Modifier.size(48.dp)
-                )
-            }
-        }
-    }
+    )
 }
 
 @Composable
