@@ -6,6 +6,8 @@ import com.example.mindflow.data.local.hardware.AudioDataSource
 import com.example.mindflow.data.local.hardware.SpeechToTextDataSource
 import com.example.mindflow.data.local.hardware.impl.AndroidAudioDataSource
 import com.example.mindflow.data.local.hardware.impl.MockSpeechToTextDataSource
+import com.example.mindflow.data.local.preferences.SessionPreferencesDataSource
+import com.example.mindflow.data.local.preferences.impl.DataStoreSessionPreferencesDataSource
 import com.example.mindflow.data.remote.datasource.IdeaProcessorDataSource
 import com.example.mindflow.data.remote.datasource.IdeaRemoteDataSource
 import com.example.mindflow.data.remote.datasource.UserRemoteDataSource
@@ -87,4 +89,10 @@ abstract class DataModule {
     abstract fun bindAudioRecorder(
         audioRecorderImpl: AudioRecorderImpl
     ): AudioRecorder
+
+    @Binds
+    @Singleton
+    abstract fun bindSessionPreferencesDataSource(
+        dataStoreSessionPreferencesDataSource: DataStoreSessionPreferencesDataSource
+    ): SessionPreferencesDataSource
 }
