@@ -108,4 +108,17 @@ class CreateIdeaViewModel @Inject constructor(
             }
         }
     }
+
+    fun onScreenLifecycleEnded() {
+        audioRecorder.cleanup()
+        _uiState.value = _uiState.value.copy(
+            recordingState = RecordingState.Idle,
+            error = null
+        )
+    }
+
+    override fun onCleared() {
+        audioRecorder.cleanup()
+        super.onCleared()
+    }
 }

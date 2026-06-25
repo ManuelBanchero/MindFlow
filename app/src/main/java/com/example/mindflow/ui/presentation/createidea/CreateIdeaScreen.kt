@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.mindflow.ui.components.RecordingLifecycleEffect
 
 @Composable
 fun CreateIdeaScreen(
@@ -19,6 +20,10 @@ fun CreateIdeaScreen(
             onCreateIdeaSuccess(id)
         }
     }
+
+    RecordingLifecycleEffect(
+        onCleanup = viewModel::onScreenLifecycleEnded
+    )
 
     CreateIdeaContent(
         uiState,
