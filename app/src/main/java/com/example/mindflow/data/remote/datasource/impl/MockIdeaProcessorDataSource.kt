@@ -3,7 +3,6 @@ package com.example.mindflow.data.remote.datasource.impl
 import android.net.Uri
 import com.example.mindflow.data.remote.datasource.IdeaProcessorDataSource
 import com.example.mindflow.data.remote.dto.IdeaDTO
-import com.example.mindflow.data.remote.dto.ProcessedAnswerQuestionDTO
 import com.example.mindflow.data.remote.dto.ProcessedIdeaDraftDTO
 import com.example.mindflow.data.remote.dto.ProcessedQuestionDraftDTO
 import com.example.mindflow.data.remote.dto.QuestionDTO
@@ -47,7 +46,7 @@ class MockIdeaProcessorDataSourceImpl @Inject constructor() : IdeaProcessorDataS
                     ideaId = 1,
                     category = "Arquitectura",
                     questionText = "¿Cómo estructurarás el módulo de Hilt?",
-                    description = "Pensar en el uso de @Binds o @Provides para desacoplar la interfaz de su implementación."
+                    description = "Pensar en el uso de @Binds or @Provides para desacoplar la interfaz de su implementación."
                 ),
                 QuestionDTO(
                     id = 2,
@@ -100,30 +99,37 @@ class MockIdeaProcessorDataSourceImpl @Inject constructor() : IdeaProcessorDataS
     }
 
     override suspend fun expandIdeaWithAnswerQuestion(
-        ideaTitle: String,
-        ideaContent: List<StructuredSectionDTO>,
-        question: String,
-        questionDescription: String,
+        ideaId: Int,
+        questionId: Int,
         audioUri: Uri
-    ): ProcessedAnswerQuestionDTO {
+    ): IdeaDTO {
         // Simulating an API response
         delay(2000)
 
-        return ProcessedAnswerQuestionDTO(
+        return IdeaDTO(
+            id = ideaId,
+            userId = 1,
+            title = "MindFlow: Captura Inteligente de Ideas con Arquitectura Limpia",
+            categories = listOf("Desarrollo Mobile", "Android"),
             summarizeContent = "Consolidación tras responder a la pregunta sobre sincronización y tolerancia a fallos.",
-            structuredIdea = ideaContent + listOf(
+            structuredIdea = listOf(
+                StructuredSectionDTO(
+                    type = StructuredSectionType.MAIN_IDEA,
+                    title = "Pilares del Proyecto",
+                    content = "1. **Captura Fricción-Cero:** Permite al usuario grabar audios o escribir textos masivos sin preocuparse por el formato.\n2. **Procesamiento con IA:** Uso de modelos de lenguaje para extraer títulos, resúmenes, categorías y formatear el núcleo de la idea.\n3. **Enfoque Pedagógico:** Generación automática de preguntas clave para forzar al usuario a iterar."
+                ),
                 StructuredSectionDTO(
                     type = StructuredSectionType.PROCESS,
                     title = "Estrategia de Sincronización",
                     content = "Se incorpora un sistema de reintentos y almacenamiento temporal en Room bajo el estado 'PENDING_STRUCTURE'. Esto garantiza que el usuario nunca pierda información."
-                ),
-                StructuredSectionDTO(
-                    type = StructuredSectionType.BENEFITS,
-                    title = "Evolución tras respuesta",
-                    content = "La conversión de voz a texto se desacopla de la estructuración semántica."
                 )
             ),
-            transcription = "Para la sincronización voy a usar WorkManager para asegurar que las ideas se suban incluso si no hay internet en el momento, guardando un estado pendiente en Room."
+            textsAudioHistory = listOf(
+                "Para la sincronización voy a usar WorkManager para asegurar que las ideas se suban incluso si no hay internet en el momento, guardando un estado pendiente en Room."
+            ),
+            createdAt = Instant.now().toEpochMilli(),
+            updatedAt = Instant.now().toEpochMilli(),
+            questions = emptyList()
         )
     }
 }
