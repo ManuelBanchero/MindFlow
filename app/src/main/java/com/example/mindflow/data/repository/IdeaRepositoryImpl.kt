@@ -110,7 +110,8 @@ class IdeaRepositoryImpl @Inject constructor(
                     ideaId = idea.id,
                     category = draft.category,
                     questionText = draft.questionText,
-                    description = draft.description
+                    description = draft.description,
+                    wasAnswered = false
                 )
             }
 
@@ -144,30 +145,32 @@ class IdeaRepositoryImpl @Inject constructor(
         return try {
             val uri: Uri = audioUri.toUri()
 
-            val questionEntity = ideaDao.getQuestionById(questionId)
+            // Validate if the questions exists
+            ideaDao.getQuestionById(questionId)
                 ?: throw IllegalArgumentException("No se encontró la pregunta con ID $questionId")
 
-            val processedAnswerDto = ideaProcessorDataSource.expandIdeaWithAnswerQuestion(
-                idea.title,
-                idea.structuredIdea.map { it.toDto() },
-                questionEntity.questionText,
-                questionEntity.description,
+            // Expand and save in cloud
+            val ideaDto = ideaProcessorDataSource.expandIdeaWithAnswerQuestion(
+                idea.id,
+                questionId,
                 uri
             )
+
+            // Delete audio from user files
             ideaProcessorDataSource.deleteAudio(uri)
 
-            // Creamos la idea actualizada eliminando la pregunta respondida de la lista
-            val updatedIdea = idea.copy(
-                summarizeContent = processedAnswerDto.summarizeContent,
-                structuredIdea = processedAnswerDto.structuredIdea.map { it.toDomain() },
-                textsAudiosHistory = idea.textsAudiosHistory + processedAnswerDto.transcription,
-                questions = idea.questions.filter { it.id != questionId }
-            )
-
-            ideaRemoteDataSource.updateIdea(updatedIdea.toDto())
+            // update locally
             database.withTransaction {
-                ideaDao.upsertIdea(updatedIdea.toEntity())
-                ideaDao.deleteQuestionById(questionId)
+                ideaDao.upsertIdea(ideaDto.toEntity())
+                ideaDao.deleteQuestionsByIdeaId(ideaDto.id)
+                ideaDao.upsertQuestions(
+                    ideaDto.questions.mapIndexed { index, questionDto ->
+                        questionDto.toEntity(
+                            generatedId = if (questionDto.id != 0) questionDto.id else index + 1,
+                            ideaIdOverride = ideaDto.id
+                        )
+                    }
+                )
             }
 
             Result.success(Unit)
