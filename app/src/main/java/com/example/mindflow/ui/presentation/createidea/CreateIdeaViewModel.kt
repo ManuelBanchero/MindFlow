@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.mindflow.domain.service.AudioRecorder
 import com.example.mindflow.domain.service.RecordingState
 import com.example.mindflow.domain.usecase.CreateIdeaUseCase
+import com.example.mindflow.domain.usecase.GetActiveSessionUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -16,7 +17,8 @@ data class CreateIdeaUiState(
     val recordingState: RecordingState = RecordingState.Idle,
     val isProcessing: Boolean = false,
     val error: String? = null,
-    val createdIdeaId: Int? = null
+    val createdIdeaId: Int? = null,
+    val userFirstName: String = ""
 )
 
 sealed interface CreateIdeaEvent {
@@ -28,6 +30,7 @@ sealed interface CreateIdeaEvent {
 @HiltViewModel
 class CreateIdeaViewModel @Inject constructor(
     private val createIdeaUseCase: CreateIdeaUseCase,
+    private val getActiveSessionUseCase: GetActiveSessionUseCase,
     private val audioRecorder: AudioRecorder // Inyectamos nuestro nuevo servicio
 ) : ViewModel() {
 
@@ -35,6 +38,13 @@ class CreateIdeaViewModel @Inject constructor(
     val uiState: StateFlow<CreateIdeaUiState> = _uiState.asStateFlow()
 
     init {
+        viewModelScope.launch {
+            val activeUser = getActiveSessionUseCase()
+            _uiState.value = _uiState.value.copy(
+                userFirstName = activeUser?.firstName.orEmpty()
+            )
+        }
+
         // Observamos el estado del grabador y lo vinculamos a nuestra UI
         viewModelScope.launch {
             audioRecorder.recordingState.collect { state ->
