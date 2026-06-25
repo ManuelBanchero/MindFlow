@@ -23,7 +23,8 @@ fun QuestionEntity.toDomain(): Question {
         ideaId = this.ideaId,
         category = this.category,
         questionText = this.questionText,
-        description = this.description
+        description = this.description,
+        wasAnswered = this.wasAnswered
     )
 }
 
@@ -65,6 +66,7 @@ fun Question.toEntity(): QuestionEntity {
         category = this.category,
         questionText = this.questionText,
         description = this.description,
+        wasAnswered = this.wasAnswered,
     )
 }
 
@@ -94,6 +96,7 @@ fun QuestionDTO.toEntity(
         category = this.category,
         questionText = this.questionText,
         description = this.description,
+        wasAnswered = this.wasAnswered,
     )
 }
 
@@ -105,7 +108,8 @@ fun Question.toDto(): QuestionDTO {
         ideaId = this.ideaId,
         category = this.category,
         questionText = this.questionText,
-        description = this.description
+        description = this.description,
+        wasAnswered = this.wasAnswered
     )
 }
 
