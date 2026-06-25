@@ -124,8 +124,8 @@ private fun CreateIdeaContentLayout(
         else -> "¿Listo para soltar tus ideas?"
     }
     val subtitle = when {
-        uiState.isProcessing -> "Estamos convirtiendo tu voz en una idea organizada."
-        isRecording -> "Hablá con naturalidad. Cuando termines, tocá finalizar."
+        uiState.isProcessing -> "Convirtiendo tu voz en una idea organizada."
+        isRecording -> "Cuando termines, tocá finalizar."
         isPaused -> "Podés continuar grabando o cancelar esta captura."
         uiState.recordingState is RecordingState.Error -> "Revisá el permiso del micrófono e intentá de nuevo."
         else -> "Presioná el micrófono y comenzá a hablar."
@@ -324,7 +324,7 @@ private fun VoiceOrb(
     isPaused: Boolean,
     isProcessing: Boolean
 ) {
-    val animationSpeed = if (isRecording || isProcessing) 2f else 0.5f
+    val animationSpeed = if (isRecording) 2f else 0.5f
 
     Box(
         modifier = Modifier.size(284.dp),
