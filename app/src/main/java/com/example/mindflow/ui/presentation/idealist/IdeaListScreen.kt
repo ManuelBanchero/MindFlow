@@ -9,6 +9,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 fun IdeaListScreen(
     onNavigateToIdeaDetail: (Int) -> Unit,
     onNavigateToCreateIdea: () -> Unit,
+    onNavigateToLogout: () -> Unit,
     viewModel: IdeaListViewModel
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -25,6 +26,7 @@ fun IdeaListScreen(
     IdeaListContent(
         uiState = uiState,
         onNavigateToCreateIdea = onNavigateToCreateIdea,
+        onNavigateToLogout = onNavigateToLogout,
         onIdeaClick = { id ->
             viewModel.onEvent(IdeaListEvent.OnIdeaClick(id))
         }
