@@ -9,6 +9,7 @@ import com.example.mindflow.data.remote.dto.ProcessedAnswerQuestionDTO
 import com.example.mindflow.data.remote.dto.ProcessedIdeaDraftDTO
 import com.example.mindflow.data.remote.dto.StructuredSectionDTO
 import com.example.mindflow.data.remote.extensions.audioUriToMultiPart
+import com.example.mindflow.data.remote.extensions.toTextRequestBody
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 
@@ -17,10 +18,10 @@ class RetrofitIdeaProcessorDataSourceImpl @Inject constructor(
     private val context: Context,
     private val apiService: MindFlowApiService
 ): IdeaProcessorDataSource {
-    override suspend fun processIdea(audioUri: Uri): IdeaDTO {
+    override suspend fun processIdea(audioUri: Uri, userId: Int): IdeaDTO {
         val audioPart = context.audioUriToMultiPart(audioUri)
 
-        return apiService.processIdea(audioPart)
+        return apiService.processIdea(audioPart, userId.toTextRequestBody())
     }
 
     override suspend fun deleteAudio(audioUri: Uri) {
