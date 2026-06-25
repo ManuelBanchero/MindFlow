@@ -10,6 +10,7 @@ import com.example.mindflow.ui.components.RecordingLifecycleEffect
 fun CreateIdeaScreen(
     onCreateIdeaSuccess: (Int) -> Unit,
     onNavigateToIdeaList: () -> Unit,
+    onNavigateToLogout: () -> Unit,
     viewModel: CreateIdeaViewModel
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
@@ -28,6 +29,7 @@ fun CreateIdeaScreen(
     CreateIdeaContent(
         uiState,
         onEvent = { event -> viewModel.onEvent(event) },
-        onNavigateToIdeaList = onNavigateToIdeaList
+        onNavigateToIdeaList = onNavigateToIdeaList,
+        onNavigateToLogout = onNavigateToLogout
     )
 }
