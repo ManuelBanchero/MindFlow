@@ -16,6 +16,7 @@ import com.example.mindflow.ui.presentation.createidea.CreateIdeaScreen
 import com.example.mindflow.ui.presentation.ideadetail.IdeaDetailScreen
 import com.example.mindflow.ui.presentation.idealist.IdeaListScreen
 import com.example.mindflow.ui.presentation.login.LoginScreen
+import com.example.mindflow.ui.presentation.logout.LogoutScreen
 import com.example.mindflow.ui.presentation.questions.QuestionsScreen
 import com.example.mindflow.ui.presentation.register.RegisterScreen
 import com.example.mindflow.ui.presentation.updateidea.UpdateIdeaScreen
@@ -86,6 +87,21 @@ fun MindFlowAppNavigation() {
             )
         }
 
+        composable("logout") {
+            LogoutScreen(
+                onBack = {
+                    navController.popBackStack()
+                },
+                onLogoutSuccess = {
+                    navController.navigate("auth_gate") {
+                        popUpTo(navController.graph.id) { inclusive = true }
+                        launchSingleTop = true
+                    }
+                },
+                viewModel = hiltViewModel()
+            )
+        }
+
         composable("create_idea") {
             CreateIdeaScreen(
                 onCreateIdeaSuccess = {
@@ -95,6 +111,11 @@ fun MindFlowAppNavigation() {
                 },
                 onNavigateToIdeaList = {
                     navController.navigate("idea_list") {
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToLogout = {
+                    navController.navigate("logout") {
                         launchSingleTop = true
                     }
                 },
@@ -110,6 +131,11 @@ fun MindFlowAppNavigation() {
                 },
                 onNavigateToCreateIdea = {
                     navController.navigate("create_idea") {
+                        launchSingleTop = true
+                    }
+                },
+                onNavigateToLogout = {
+                    navController.navigate("logout") {
                         launchSingleTop = true
                     }
                 },
