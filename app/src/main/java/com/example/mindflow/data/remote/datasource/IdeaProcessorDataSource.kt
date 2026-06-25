@@ -17,10 +17,8 @@ interface IdeaProcessorDataSource {
     ): ProcessedIdeaDraftDTO
 
     suspend fun expandIdeaWithAnswerQuestion(
-        ideaTitle: String,
-        ideaContent: List<StructuredSectionDTO>,
-        question: String,
-        questionDescription: String,
+        ideaId: Int,
+        questionId: Int,
         audioUri: Uri
-    ): ProcessedAnswerQuestionDTO
+    ): IdeaDTO
 }
