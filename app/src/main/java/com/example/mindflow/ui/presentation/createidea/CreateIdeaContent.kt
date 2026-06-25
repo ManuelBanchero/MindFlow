@@ -66,6 +66,7 @@ fun CreateIdeaContent(
     uiState: CreateIdeaUiState,
     onEvent: (CreateIdeaEvent) -> Unit,
     onNavigateToIdeaList: () -> Unit,
+    onNavigateToLogout: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
@@ -97,6 +98,7 @@ fun CreateIdeaContent(
         onPauseAction = { onEvent(CreateIdeaEvent.OnTogglePause) },
         onCancelAction = { onEvent(CreateIdeaEvent.OnCancelIdea) },
         onNavigateToIdeaList = onNavigateToIdeaList,
+        onNavigateToLogout = onNavigateToLogout,
         modifier = modifier
     )
 }
@@ -108,6 +110,7 @@ private fun CreateIdeaContentLayout(
     onPauseAction: () -> Unit,
     onCancelAction: () -> Unit,
     onNavigateToIdeaList: () -> Unit,
+    onNavigateToLogout: () -> Unit,
     modifier: Modifier = Modifier
 ) {
     val colors = MaterialTheme.mindFlowColors
@@ -148,7 +151,9 @@ private fun CreateIdeaContentLayout(
             ) {
                 Spacer(modifier = Modifier.height(28.dp))
 
-                CreateIdeaTopBar()
+                CreateIdeaTopBar(
+                    onNavigateToLogout = onNavigateToLogout
+                )
 
                 Spacer(modifier = Modifier.height(36.dp))
 
@@ -265,7 +270,9 @@ private fun CreateIdeaBackground(
 }
 
 @Composable
-private fun CreateIdeaTopBar() {
+private fun CreateIdeaTopBar(
+    onNavigateToLogout: () -> Unit
+) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
@@ -280,7 +287,7 @@ private fun CreateIdeaTopBar() {
         TopIconButton(
             icon = Icons.Default.Person,
             contentDescription = "Perfil",
-            onClick = { }
+            onClick = onNavigateToLogout
         )
     }
 }
