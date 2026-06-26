@@ -1,5 +1,6 @@
 package com.example.mindflow.data.di
 
+import com.example.mindflow.BuildConfig
 import com.example.mindflow.data.remote.api.MindFlowApiService
 import dagger.Module
 import dagger.Provides
@@ -20,7 +21,7 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideBaseUrl(): String = "http://10.0.2.2:3000/" // Alias para localhost del host desde el emulador
+    fun provideBaseUrl(): String = BuildConfig.API_BASE_URL
 
     @Provides
     @Singleton
